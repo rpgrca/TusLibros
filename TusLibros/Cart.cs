@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 using System;
 
@@ -10,7 +11,12 @@ namespace TusLibros.UnitTests
         private readonly List<object> _items;
         private readonly List<object> _catalog;
 
-        public List<object> GetBooks() => _items;
+        public List<object> GetBooks()
+        {
+            var itemsToReturn = new List<object>();
+            _items.ForEach(p => itemsToReturn.Add(p));
+            return itemsToReturn;
+        }
 
         public int Count => _items.Count;
 
@@ -39,5 +45,9 @@ namespace TusLibros.UnitTests
                 _items.Add(item);
             }
         }
+
+        public int GetCount(object item) => _items.Count(p => p == item);
+
+        public bool Contains(object item) => _items.Contains(item);
     }
 }
