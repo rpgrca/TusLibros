@@ -36,24 +36,16 @@ namespace TusLibros.UnitTests
             Assert.Equal(Cashier.CART_IS_EMPTY_ERROR, exception.Message);
         }
 
-        [Fact]
-        public void Test4()
+        [Theory]
+        [InlineData(10)]
+        [InlineData(15)]
+        public void Test4(decimal price)
         {
             var cart = GetCartWithACatalogWithValidItem();
             cart.Add(VALID_ITEM, 1);
-            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE));
+            var cashier = new Cashier(GetPricelistWithOneValidItem(price));
             var total = cashier.Checkout(cart);
-            Assert.Equal(10, total);
-        }
-
-        [Fact]
-        public void Test5()
-        {
-            var cart = GetCartWithACatalogWithValidItem();
-            cart.Add(VALID_ITEM, 1);
-            var cashier = new Cashier(GetPricelistWithOneValidItem(15));
-            var total = cashier.Checkout(cart);
-            Assert.Equal(15, total);
+            Assert.Equal(price, total);
         }
 
         private Dictionary<object, decimal> GetPricelistWithOneValidItem(decimal price)
