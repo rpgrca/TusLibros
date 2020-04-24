@@ -14,16 +14,20 @@ namespace TusLibros
         public const string ITEM_NOT_IN_PRICELIST_ERROR = "El producto no está en la lista de precios";
         public const string CREDIT_CARD_NUMBER_IS_NULL_ERROR = "El número de la tarjeta de crédito es inválida";
         public const string CREDIT_CARD_NUMBER_IS_INVALID_ERROR = "El número de la tarjeta de crédito es inválida";
+        public const string MERCHANT_ADAPTER_IS_NULL_ERROR = "El Merchant Adapter no puede no existir";
 
         private readonly Dictionary<object, decimal> _priceList;
+        private readonly IMerchantAdapter _merchantAdapter;
 
-        public Cashier(Dictionary<object, decimal> priceList)
+        public Cashier(Dictionary<object, decimal> priceList, IMerchantAdapter merchantAdapter)
         {
             _priceList = priceList ?? throw new ArgumentException(PRICELIST_IS_NULL_ERROR);
             if (_priceList.Count < 1)
             {
                 throw new ArgumentException(PRICELIST_IS_EMPTY_ERROR);
             }
+
+            _merchantAdapter = merchantAdapter ?? throw new ArgumentException(MERCHANT_ADAPTER_IS_NULL_ERROR);
         }
 
         public decimal Checkout(Cart cart, string creditCardNumber)

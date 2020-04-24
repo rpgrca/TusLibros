@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using Xunit;
 using static TusLibros.UnitTests.Helpers;
+using TusLibros.MerchantFakes;
 
 namespace TusLibros.UnitTests
 {
@@ -16,28 +17,28 @@ namespace TusLibros.UnitTests
         [Fact]
         public void GivenANewCashier_WhenInitializedWithNullPricelist_ThenThrowsAnException()
         {
-            var exception = Assert.Throws<ArgumentException>(() => new Cashier(null));
+            var exception = Assert.Throws<ArgumentException>(() => new Cashier(null, new DummyMerchant()));
             Assert.Equal(Cashier.PRICELIST_IS_NULL_ERROR, exception.Message);
         }
 
         [Fact]
         public void GivenANewCashier_WhenInitializedWithEmptyPricelist_ThenThrowsAnException()
         {
-            var exception = Assert.Throws<ArgumentException>(() => new Cashier(GetEmptyPricelist()));
+            var exception = Assert.Throws<ArgumentException>(() => new Cashier(GetEmptyPricelist(), new DummyMerchant()));
             Assert.Equal(Cashier.PRICELIST_IS_EMPTY_ERROR, exception.Message);
         }
 
         [Fact]
         public void GivenANewCashier_WhenInitializedWithAValidPricelist_ThenItCreatesIt()
         {
-            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE));
+            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), new DummyMerchant());
             Assert.NotNull(cashier);
         }
 
         [Fact]
         public void GivenACashierWithPricelist_WhenCheckingOutWithNullCart_ThenThrowsAnException()
         {
-            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE));
+            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), new DummyMerchant());
             var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(null, VALID_CREDIT_CARD));
             Assert.Equal(Cashier.CART_IS_NULL_ERROR, exception.Message);
         }
@@ -46,7 +47,7 @@ namespace TusLibros.UnitTests
         public void GivenACashierWithPricelist_WhenCheckingOutWithEmptyCart_ThenThrowsAnException()
         {
             var cart = GetCartWithEmptyCatalog();
-            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE));
+            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), new DummyMerchant());
             var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
             Assert.Equal(Cashier.CART_IS_EMPTY_ERROR, exception.Message);
         }
@@ -58,7 +59,7 @@ namespace TusLibros.UnitTests
         {
             var cart = GetCartWithACatalogWithValidItem();
             cart.Add(VALID_ITEM, 1);
-            var cashier = new Cashier(GetPricelistWithOneValidItem(price));
+            var cashier = new Cashier(GetPricelistWithOneValidItem(price), new DummyMerchant());
             var total = cashier.Checkout(cart, VALID_CREDIT_CARD);
             Assert.Equal(price, total);
         }
@@ -69,7 +70,7 @@ namespace TusLibros.UnitTests
             var cart = GetCartWithACatalogWithTwoValidItems();
             cart.Add(VALID_ITEM, 1);
             cart.Add(ANOTHER_VALID_ITEM, 4);
-            var cashier = new Cashier(GetPricelistWithTwoValidItems());
+            var cashier = new Cashier(GetPricelistWithTwoValidItems(), new DummyMerchant());
             var total = cashier.Checkout(cart, VALID_CREDIT_CARD);
             Assert.Equal(22, total);
         }
@@ -79,7 +80,7 @@ namespace TusLibros.UnitTests
         {
             var cart = GetCartWithACatalogWithTwoValidItems();
             cart.Add(ANOTHER_VALID_ITEM, 1);
-            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE));
+            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), new DummyMerchant());
             var exception = Assert.Throws<KeyNotFoundException>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
             Assert.Equal(Cashier.ITEM_NOT_IN_PRICELIST_ERROR, exception.Message);
         }
@@ -121,6 +122,13 @@ namespace TusLibros.UnitTests
             cashier.Checkout(cart, VALID_CREDIT_CARD);
         }
 
+        [Fact]
+        public void Test4()
+        {
+            var exception = Assert.Throws<ArgumentException>(() => new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), null));
+            Assert.Equal(Cashier.MERCHANT_ADAPTER_IS_NULL_ERROR, exception.Message);
+        }
+
         private Cart GetCartWithOneItem()
         {
             var cart = GetCartWithACatalogWithValidItem();
@@ -130,7 +138,7 @@ namespace TusLibros.UnitTests
 
         private Cashier GetCashierWithPricelistWithOneItem()
         {
-            return new Cashier(GetPricelistWithOneValidItem(VALID_PRICE));
+            return new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), new DummyMerchant());
         }
 
         private Dictionary<object, decimal> GetPricelistWithOneValidItem(decimal price)
