@@ -12,6 +12,8 @@ namespace TusLibros
         public const string PRICELIST_IS_NULL_ERROR = "La lista de precios no puede no existir";
         public const string PRICELIST_IS_EMPTY_ERROR = "La lista de precios no puede estar vacía";
         public const string ITEM_NOT_IN_PRICELIST_ERROR = "El producto no está en la lista de precios";
+        public const string CREDIT_CARD_NUMBER_IS_NULL_ERROR = "El número de la tarjeta de crédito es inválida";
+        public const string CREDIT_CARD_NUMBER_IS_INVALID_ERROR = "El número de la tarjeta de crédito es inválida";
 
         private readonly Dictionary<object, decimal> _priceList;
 
@@ -24,7 +26,7 @@ namespace TusLibros
             }
         }
 
-        public decimal Checkout(Cart cart)
+        public decimal Checkout(Cart cart, string creditCardNumber)
         {
             _ = cart ?? throw new ArgumentException(CART_IS_NULL_ERROR);
             if (cart.IsEmpty())
@@ -32,7 +34,9 @@ namespace TusLibros
                 throw new ArgumentException(CART_IS_EMPTY_ERROR);
             }
 
-            return cart.GetBooks().Sum(i =>
+            ValidateCreditCard(creditCardNumber);
+
+            var total = cart.GetBooks().Sum(i =>
             {
                 if (_priceList.ContainsKey(i))
                 {
@@ -41,6 +45,32 @@ namespace TusLibros
 
                 throw new KeyNotFoundException(ITEM_NOT_IN_PRICELIST_ERROR);
             });
+
+            Debit(total, creditCardNumber);
+            return total;
+        }
+
+        protected virtual void Debit(decimal total, string creditCardNumber)
+        {
+
+        }
+
+        private static void ValidateCreditCard(string creditCardNumber)
+        {
+            if (string.IsNullOrWhiteSpace(creditCardNumber))
+            {
+                throw new ArgumentException(CREDIT_CARD_NUMBER_IS_NULL_ERROR);
+            }
+
+            if (! decimal.TryParse(creditCardNumber, out decimal _))
+            {
+                throw new ArgumentException(CREDIT_CARD_NUMBER_IS_INVALID_ERROR);
+            }
+
+            if (creditCardNumber.Length != 16)
+            {
+                throw new ArgumentException(CREDIT_CARD_NUMBER_IS_INVALID_ERROR);
+            }
         }
     }
 }
