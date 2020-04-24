@@ -189,7 +189,6 @@ namespace TusLibros.UnitTests
     }
 }
 
-
 // Iteracion 2
 // TODO: Cashier tratando de checkout carrito vacio
 // TODO: checkout de un carrito con un elemento
