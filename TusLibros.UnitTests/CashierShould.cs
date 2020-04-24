@@ -13,6 +13,7 @@ namespace TusLibros.UnitTests
         private const string VALID_CREDIT_CARD = "1234567890123456";
         private const string INVALID_CREDIT_CARD_NUMBER = "999";
         private const string ANOTHER_INVALID_CREDIT_CARD_NUMBER = "1234-5678-123411";
+        private const string SUCCESSFUL_TRANSACTION_ID = "Todo bien";
 
         [Fact]
         public void GivenANewCashier_WhenInitializedWithNullPricelist_ThenThrowsAnException()
@@ -55,24 +56,26 @@ namespace TusLibros.UnitTests
         [Theory]
         [InlineData(10)]
         [InlineData(15)]
-        public void GivenACashierWithPricelist_WhenCheckingOutCartWithItem_ThenReturnsTheTotalSum(decimal price)
+        public void GivenACashierWithPricelist_WhenCheckingOutCartWithItem_ThenCalculatesTheTotalSum(decimal price)
         {
+            var merchantSpy = new MerchantSpy();
             var cart = GetCartWithACatalogWithValidItem();
             cart.Add(VALID_ITEM, 1);
-            var cashier = new Cashier(GetPricelistWithOneValidItem(price), new DummyMerchant());
-            var total = cashier.Checkout(cart, VALID_CREDIT_CARD);
-            Assert.Equal(price, total);
+            var cashier = new Cashier(GetPricelistWithOneValidItem(price), merchantSpy);
+            cashier.Checkout(cart, VALID_CREDIT_CARD);
+            Assert.Equal(merchantSpy.SavedTotal, price);
         }
 
         [Fact]
-        public void GivenACashierWithPricelist_WhenCheckingOutCartWithSeveralItems_ThenReturnsTheTotalSum()
+        public void GivenACashierWithPricelist_WhenCheckingOutCartWithSeveralItems_ThenCalculatesTheTotalSum()
         {
+            var merchantSpy = new MerchantSpy();
             var cart = GetCartWithACatalogWithTwoValidItems();
             cart.Add(VALID_ITEM, 1);
             cart.Add(ANOTHER_VALID_ITEM, 4);
-            var cashier = new Cashier(GetPricelistWithTwoValidItems(), new DummyMerchant());
-            var total = cashier.Checkout(cart, VALID_CREDIT_CARD);
-            Assert.Equal(22, total);
+            var cashier = new Cashier(GetPricelistWithTwoValidItems(), merchantSpy);
+            cashier.Checkout(cart, VALID_CREDIT_CARD);
+            Assert.Equal(22, merchantSpy.SavedTotal);
         }
 
         [Fact]
@@ -86,10 +89,10 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
-        public void Test1()
+        public void GivenAValidCashierAndCart_WhenCheckingOutWithNullCreditCardNumber_ThenThrowsAnException()
         {
             var cart = GetCartWithOneItem();
-            var cashier = GetCashierWithPricelistWithOneItem();
+            var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
 
             var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, null));
             Assert.Equal(Cashier.CREDIT_CARD_NUMBER_IS_NULL_ERROR, exception.Message);
@@ -98,10 +101,10 @@ namespace TusLibros.UnitTests
         [Theory]
         [InlineData(INVALID_CREDIT_CARD_NUMBER)]
         [InlineData(ANOTHER_INVALID_CREDIT_CARD_NUMBER)]
-        public void Test2(string invalidCard)
+        public void GivenAValidCashierAndCart_WhenCheckingOutWithInvalidCreditCardNumber_ThenThrowsAnException(string invalidCard)
         {
             var cart = GetCartWithOneItem();
-            var cashier = GetCashierWithPricelistWithOneItem();
+            var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
 
             var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, invalidCard));
             Assert.Equal(Cashier.CREDIT_CARD_NUMBER_IS_INVALID_ERROR, exception.Message);
@@ -112,21 +115,24 @@ namespace TusLibros.UnitTests
         // TODO: Clave
         // TODO: Modelar clase tarjeta de crédito
         // TODO: Unir catalogo y lista de precios
+        // TODO: Book sale
 
         [Fact]
-        public void Test3()
-        {
-            var cart = GetCartWithOneItem();
-            var cashier = GetCashierWithPricelistWithOneItem();
-
-            cashier.Checkout(cart, VALID_CREDIT_CARD);
-        }
-
-        [Fact]
-        public void Test4()
+        public void GivenAValidPricelist_WhenCreatingCashierWithNullMerchant_ThenThrowsAnException()
         {
             var exception = Assert.Throws<ArgumentException>(() => new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), null));
             Assert.Equal(Cashier.MERCHANT_ADAPTER_IS_NULL_ERROR, exception.Message);
+        }
+
+        [Fact]
+        public void GivenAValidCashierAndCart_WhenCheckingOutWithValidCreditCard_ThenShouldReturnTransactionId()
+        {
+            var merchantStub = new MerchantStubOk(SUCCESSFUL_TRANSACTION_ID);
+            var cart = GetCartWithOneItem();
+            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), merchantStub);
+
+            var transactionId = cashier.Checkout(cart, VALID_CREDIT_CARD);
+            Assert.Equal(SUCCESSFUL_TRANSACTION_ID, transactionId);
         }
 
         private Cart GetCartWithOneItem()
@@ -136,7 +142,7 @@ namespace TusLibros.UnitTests
             return cart;
         }
 
-        private Cashier GetCashierWithPricelistWithOneItem()
+        private Cashier GetCashierWithPricelistWithOneItemAndDummyMerchant()
         {
             return new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), new DummyMerchant());
         }

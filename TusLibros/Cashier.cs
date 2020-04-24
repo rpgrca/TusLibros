@@ -30,7 +30,7 @@ namespace TusLibros
             _merchantAdapter = merchantAdapter ?? throw new ArgumentException(MERCHANT_ADAPTER_IS_NULL_ERROR);
         }
 
-        public decimal Checkout(Cart cart, string creditCardNumber)
+        public string Checkout(Cart cart, string creditCardNumber)
         {
             _ = cart ?? throw new ArgumentException(CART_IS_NULL_ERROR);
             if (cart.IsEmpty())
@@ -50,13 +50,12 @@ namespace TusLibros
                 throw new KeyNotFoundException(ITEM_NOT_IN_PRICELIST_ERROR);
             });
 
-            Debit(total, creditCardNumber);
-            return total;
+            return Debit(total, creditCardNumber);
         }
 
-        protected virtual void Debit(decimal total, string creditCardNumber)
+        protected virtual string Debit(decimal total, string creditCardNumber)
         {
-            _merchantAdapter.Debit(total, creditCardNumber);
+            return _merchantAdapter.Debit(total, creditCardNumber);
         }
 
         private static void ValidateCreditCard(string creditCardNumber)

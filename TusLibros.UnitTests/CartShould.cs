@@ -197,6 +197,7 @@ namespace TusLibros.UnitTests
 //
 // TODO: Tarjeta vencida
 // TODO: Tarjeta valida
+// TODO: Tarjeta robada
 // TODO: Cashier.Debit(total a cobrar)
 
 // Iteracion 3
