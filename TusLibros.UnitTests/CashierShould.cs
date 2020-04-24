@@ -13,6 +13,13 @@ namespace TusLibros.UnitTests
         private const decimal VALID_PRICE = 10;
 
         [Fact]
+        public void Test0()
+        {
+            var exception = Assert.Throws<ArgumentException>(() => new Cashier(null));
+            Assert.Equal(Cashier.PRICELIST_IS_NULL_ERROR, exception.Message);
+        }
+
+        [Fact]
         public void Test1()
         {
             var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE));
