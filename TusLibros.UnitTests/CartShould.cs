@@ -21,6 +21,7 @@ namespace TusLibros.UnitTests
         {
             var cart = GetCartWithACatalogWithValidItem();
             var exception = Assert.Throws<Exception>(() => cart.Add(INVALID_ITEM, 1));
+
             Assert.Contains("No existe", exception.Message);
         }
 
