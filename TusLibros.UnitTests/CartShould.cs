@@ -94,6 +94,12 @@ namespace TusLibros.UnitTests
             cart.Add(VALID_ITEM, 1);
             Assert.False(cart.IsEmpty());
         }
+
+        [Fact]
+        public void GivenANewCart_WhenInitializedWithNullCatalog_ThenAnExceptionIsThrown()
+        {
+            Assert.Throws<ArgumentException>(() => new Cart(null));
+        }
     }
 }
 
