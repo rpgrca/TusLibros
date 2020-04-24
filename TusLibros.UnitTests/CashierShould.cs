@@ -55,12 +55,24 @@ namespace TusLibros.UnitTests
             Assert.Equal(price, total);
         }
 
+        [Fact]
+        public void Test5()
+        {
+            var exception = Assert.Throws<ArgumentException>(() => new Cashier(GetEmptyPricelist()));
+            Assert.Equal(Cashier.PRICELIST_IS_EMPTY_ERROR, exception.Message);
+        }
+
         private Dictionary<object, decimal> GetPricelistWithOneValidItem(decimal price)
         {
             return new Dictionary<object, decimal>
             {
                 { VALID_ITEM, price }
             };
+        }
+
+        private Dictionary<object, decimal> GetEmptyPricelist()
+        {
+            return new Dictionary<object, decimal>();
         }
     }
 }
