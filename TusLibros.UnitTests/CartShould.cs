@@ -1,21 +1,12 @@
 using System;
 using Xunit;
 using System.Collections.Generic;
+using static TusLibros.UnitTests.Helpers;
 
 namespace TusLibros.UnitTests
 {
     public class CartShould
     {
-        private readonly object VALID_ITEM = new object();
-        private readonly object ANOTHER_VALID_ITEM = new object();
-        private readonly object INVALID_ITEM = new object();
-
-        private List<object> GetCatalogWithValidItem() => new List<object>() { VALID_ITEM };
-        private List<object> GetCatalogWithTwoValidItems() => new List<object>() { VALID_ITEM, ANOTHER_VALID_ITEM };
-        private Cart GetCartWithACatalogWithValidItem() => new Cart(GetCatalogWithValidItem());
-        private Cart GetCartWithACatalogWithTwoValidItems() => new Cart(GetCatalogWithTwoValidItems());
-        private Cart GetCartWithEmptyCatalog() => new Cart(new List<object>());
-
         [Fact]
         public void GivenACartWithACatalogWithOneItem_WhenAnItemThatIsNotInCatalogIsAdded_ThenAnExceptionIsThrown()
         {
