@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System;
 using Xunit;
 
@@ -5,7 +6,6 @@ namespace TusLibros.UnitTests
 {
     public class CartShould
     {
-        // Given When Then
         [Fact]
         public void WhenCreatingANewCart_ThenTheCartHasZeroItems()
         {
@@ -14,22 +14,19 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
-        public void GivenANewCart_WhenAddingAnIsbn_ThenTheCartHasOneItem()
+        public void GivenANewCart_WhenAddingAnItem_ThenTheCartHasOneItem()
         {
             var cart = new Cart();
-            var isbn = "1";
-            cart.Add(isbn, 1);
+            cart.Add(new object(), 1);
             Assert.Equal(1, cart.Count);
         }
 
         [Fact]
-        public void GivenANewCart_WhenAddingTwoIsbns_ThenTheCartHasTwoItems()
+        public void GivenANewCart_WhenAddingTwoItems_ThenTheCartHasTwoItems()
         {
             var cart = new Cart();
-            var firstIsbn = "1";
-            var secondIsbn = "2";
-            cart.Add(firstIsbn, 1);
-            cart.Add(secondIsbn, 1);
+            cart.Add(new object(), 1);
+            cart.Add(new object(), 1);
             Assert.Equal(2, cart.Count);
         }
 
@@ -40,38 +37,32 @@ namespace TusLibros.UnitTests
             Assert.Empty(cart.GetBooks());
         }
 
-        [Fact]
-        public void WhenCreatingANewCart_ThenTheCartHasAnId()
-        {
-            var cart = new Cart();
-            Assert.NotNull(cart.Id);
-        }
-
-        [Fact]
-        public void GivenTwoCarts_WhenComparingIds_ThenTheIdsAreDifferent()
-        {
-            var firstCart = new Cart();
-            var secondCart = new Cart();
-            Assert.NotEqual(firstCart.Id, secondCart.Id);
-        }
-
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
-        public void GivenANewCart_WhenTryingToInvalidCountOfItems_ThenAnExceptionIsThrown(int count)
+        public void GivenANewCart_WhenTryingToAddInvalidCountOfItems_ThenAnExceptionIsThrown(int count)
         {
             var cart = new Cart();
-            var isbn = "1";
+            Assert.Throws<ArgumentException>(() => cart.Add(new object(), count));
+        }
 
-            Assert.Throws<ArgumentException>(() => cart.Add(isbn, count));
+        [Fact]
+        public void GivenANewCart_WhenAskedIsEmpty_ThenItShouldReturnTrue()
+        {
+            var cart = new Cart();
+            Assert.True(cart.IsEmpty());
+        }
+
+        [Fact]
+        public void GivenACartWithOneItem_WhenAskedIsEmpty_ThenItShouldReturnFalse()
+        {
+            var cart = new Cart();
+            cart.Add(new object(), 1);
+            Assert.False(cart.IsEmpty());
         }
     }
 }
 
-// FIXME: Modificar la lista de GetBooks para regresar un IEnumerator
-// TODO: Agregar IsEmpty a Cart
-// TODO: Agregar Catalog a Cart
-// TODO: Add debe verificar que solo acepta isbn de Catalog
 
 // Iteracion 2
 // TODO: Cashier tratando de checkout carrito vacio

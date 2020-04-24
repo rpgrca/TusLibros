@@ -6,21 +6,15 @@ namespace TusLibros.UnitTests
 {
     public class Cart
     {
-        private List<object> _items;
-        public string Id { get; }
+        private readonly List<object> _items = new List<object>();
 
-        public Cart()
-        {
-            _items = new List<object>();
-            Id = Guid.NewGuid().ToString();
-        }
+        public List<object> GetBooks() => _items;
 
-        public int Count
-        {
-            get { return _items.Count; }
-        }
+        public int Count => _items.Count;
 
-        public void Add(string isbn, int count)
+        public bool IsEmpty() => Count == 0;
+
+        public void Add(object isbn, int count)
         {
             if (count < 1)
             {
@@ -31,11 +25,6 @@ namespace TusLibros.UnitTests
             {
                 _items.Add(isbn);
             }
-        }
-
-        public List<object> GetBooks()
-        {
-            return _items;
         }
     }
 }
