@@ -11,6 +11,7 @@ namespace TusLibros.UnitTests
         private const decimal ANOTHER_VALID_PRICE = 3;
         private const string VALID_CREDIT_CARD = "1234567890123456";
         private const string INVALID_CREDIT_CARD_NUMBER = "999";
+        private const string ANOTHER_INVALID_CREDIT_CARD_NUMBER = "1234-5678-123411";
 
         [Fact]
         public void GivenANewCashier_WhenInitializedWithNullPricelist_ThenThrowsAnException()
@@ -93,19 +94,23 @@ namespace TusLibros.UnitTests
             Assert.Equal(Cashier.CREDIT_CARD_NUMBER_IS_NULL_ERROR, exception.Message);
         }
 
-        [Fact]
-        public void Test2()
+        [Theory]
+        [InlineData(INVALID_CREDIT_CARD_NUMBER)]
+        [InlineData(ANOTHER_INVALID_CREDIT_CARD_NUMBER)]
+        public void Test2(string invalidCard)
         {
             var cart = GetCartWithOneItem();
             var cashier = GetCashierWithPricelistWithOneItem();
 
-            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, INVALID_CREDIT_CARD_NUMBER));
+            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, invalidCard));
             Assert.Equal(Cashier.CREDIT_CARD_NUMBER_IS_INVALID_ERROR, exception.Message);
         }
 
         // TODO: Nombre
         // TODO: Fecha vencimiento
         // TODO: Clave
+        // TODO: Modelar clase tarjeta de crédito
+        // TODO: Unir catalogo y lista de precios
 
         [Fact]
         public void Test3()

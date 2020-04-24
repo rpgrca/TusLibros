@@ -52,7 +52,6 @@ namespace TusLibros
 
         protected virtual void Debit(decimal total, string creditCardNumber)
         {
-
         }
 
         private static void ValidateCreditCard(string creditCardNumber)
