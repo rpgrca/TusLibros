@@ -11,6 +11,7 @@ namespace TusLibros.UnitTests
     public class CashierShould
     {
         private const decimal VALID_PRICE = 10;
+        private const decimal ANOTHER_VALID_PRICE = 3;
 
         [Fact]
         public void Test0()
@@ -62,6 +63,27 @@ namespace TusLibros.UnitTests
             Assert.Equal(Cashier.PRICELIST_IS_EMPTY_ERROR, exception.Message);
         }
 
+        [Fact]
+        public void Test6()
+        {
+            var cart = GetCartWithACatalogWithTwoValidItems();
+            cart.Add(VALID_ITEM, 1);
+            cart.Add(ANOTHER_VALID_ITEM, 4);
+            var cashier = new Cashier(GetPricelistWithTwoValidItems());
+            var total = cashier.Checkout(cart);
+            Assert.Equal(22, total);
+        }
+
+        [Fact]
+        public void Test7()
+        {
+             var cart = GetCartWithACatalogWithTwoValidItems();
+            cart.Add(ANOTHER_VALID_ITEM, 1);
+            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE));
+            var exception = Assert.Throws<KeyNotFoundException>(() => cashier.Checkout(cart));
+            Assert.Equal(Cashier.ITEM_NOT_IN_PRICELIST_ERROR, exception.Message);
+        }
+
         private Dictionary<object, decimal> GetPricelistWithOneValidItem(decimal price)
         {
             return new Dictionary<object, decimal>
@@ -70,6 +92,14 @@ namespace TusLibros.UnitTests
             };
         }
 
+        private Dictionary<object, decimal> GetPricelistWithTwoValidItems()
+        {
+            return new Dictionary<object, decimal>
+            {
+                { VALID_ITEM, VALID_PRICE },
+                { ANOTHER_VALID_ITEM, ANOTHER_VALID_PRICE }
+            };
+        }
         private Dictionary<object, decimal> GetEmptyPricelist()
         {
             return new Dictionary<object, decimal>();

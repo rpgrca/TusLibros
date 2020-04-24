@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 using System;
 using TusLibros.UnitTests;
@@ -10,6 +11,7 @@ namespace TusLibros
         public const string CART_IS_EMPTY_ERROR = "El carrito no puede estar vacío";
         public const string PRICELIST_IS_NULL_ERROR = "La lista de precios no puede no existir";
         public const string PRICELIST_IS_EMPTY_ERROR = "La lista de precios no puede estar vacía";
+        public const string ITEM_NOT_IN_PRICELIST_ERROR = "El producto no está en la lista de precios";
 
         private readonly Dictionary<object, decimal> _priceList;
 
@@ -30,7 +32,15 @@ namespace TusLibros
                 throw new ArgumentException(CART_IS_EMPTY_ERROR);
             }
 
-            return _priceList[cart.GetBooks()[0]];
+            return cart.GetBooks().Sum(i =>
+            {
+                if (_priceList.ContainsKey(i))
+                {
+                    return _priceList[i];
+                }
+
+                throw new KeyNotFoundException(ITEM_NOT_IN_PRICELIST_ERROR);
+            });
         }
     }
 }
