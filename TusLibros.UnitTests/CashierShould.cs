@@ -14,21 +14,28 @@ namespace TusLibros.UnitTests
         private const decimal ANOTHER_VALID_PRICE = 3;
 
         [Fact]
-        public void Test0()
+        public void GivenANewCashier_WhenInitializedWithNullPricelist_ThenThrowsAnException()
         {
             var exception = Assert.Throws<ArgumentException>(() => new Cashier(null));
             Assert.Equal(Cashier.PRICELIST_IS_NULL_ERROR, exception.Message);
         }
 
         [Fact]
-        public void Test1()
+        public void GivenANewCashier_WhenInitializedWithEmptyPricelist_ThenThrowsAnException()
+        {
+            var exception = Assert.Throws<ArgumentException>(() => new Cashier(GetEmptyPricelist()));
+            Assert.Equal(Cashier.PRICELIST_IS_EMPTY_ERROR, exception.Message);
+        }
+
+        [Fact]
+        public void GivenANewCashier_WhenInitializedWithAValidPricelist_ThenItCreatesIt()
         {
             var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE));
             Assert.NotNull(cashier);
         }
 
         [Fact]
-        public void Test2()
+        public void GivenACashierWithPricelist_WhenCheckingOutWithNullCart_ThenThrowsAnException()
         {
             var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE));
             var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(null));
@@ -36,7 +43,7 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
-        public void Test3()
+        public void GivenACashierWithPricelist_WhenCheckingOutWithEmptyCart_ThenThrowsAnException()
         {
             var cart = GetCartWithEmptyCatalog();
             var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE));
@@ -47,7 +54,7 @@ namespace TusLibros.UnitTests
         [Theory]
         [InlineData(10)]
         [InlineData(15)]
-        public void Test4(decimal price)
+        public void GivenACashierWithPricelist_WhenCheckingOutCartWithItem_ThenReturnsTheTotalSum(decimal price)
         {
             var cart = GetCartWithACatalogWithValidItem();
             cart.Add(VALID_ITEM, 1);
@@ -57,14 +64,7 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
-        public void Test5()
-        {
-            var exception = Assert.Throws<ArgumentException>(() => new Cashier(GetEmptyPricelist()));
-            Assert.Equal(Cashier.PRICELIST_IS_EMPTY_ERROR, exception.Message);
-        }
-
-        [Fact]
-        public void Test6()
+        public void GivenACashierWithPricelist_WhenCheckingOutCartWithSeveralItems_ThenReturnsTheTotalSum()
         {
             var cart = GetCartWithACatalogWithTwoValidItems();
             cart.Add(VALID_ITEM, 1);
@@ -75,7 +75,7 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
-        public void Test7()
+        public void GivenACashierWithPricelist_WhenCheckingOutCartWithInvalidItem_ThenThrowsAnException()
         {
              var cart = GetCartWithACatalogWithTwoValidItems();
             cart.Add(ANOTHER_VALID_ITEM, 1);
@@ -91,7 +91,6 @@ namespace TusLibros.UnitTests
                 { VALID_ITEM, price }
             };
         }
-
         private Dictionary<object, decimal> GetPricelistWithTwoValidItems()
         {
             return new Dictionary<object, decimal>
