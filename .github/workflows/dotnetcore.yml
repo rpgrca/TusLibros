@@ -32,7 +32,7 @@ jobs:
       run: dotnet build --configuration Debug --no-restore
 
     - name: Test
-      run: coverlet bin/Debug/netcoreapp2.2/TusLibros.UnitTests.dll --target "dotnet" --targetargs "test TusLibros.UnitTests.csproj --no-build --verbosity quiet" --format OpenCover --output coverage.xml
+      run: coverlet TusLibros.UnitTests/bin/Debug/netcoreapp2.2/TusLibros.UnitTests.dll --target "dotnet" --targetargs "test TusLibros.UnitTests/TusLibros.UnitTests.csproj --no-build --verbosity quiet" --format OpenCover --output coverage.xml
 
     - name: Upload
       run: bash <(curl -s https://codecov.io/bash)
