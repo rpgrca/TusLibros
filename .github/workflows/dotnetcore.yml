@@ -1,47 +1,32 @@
-#name: Build
-#
-#on:
-#  push:
-#    branches: [ master ]
-#  pull_request:
-#    branches: [ master ]
-#
-#jobs:
-#  build:
-#
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - uses: actions/checkout@v2
-#
-#    - name: Setup .NET Core
-#      uses: actions/setup-dotnet@v1
-#      with:
-#        dotnet-version: 2.2.203
-#
-#    - name: Install dependencies
-#      run: dotnet restore
-#
-#    - name: Build
-#      run: dotnet build --configuration Release --no-restore
-#
-#    - name: Test
-#      run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=OpenCover
+name: Build
 
-image: Visual Studio 2015
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
-before_build:
-- nuget restore
-- choco install opencover.portable
-- choco install codecov
+jobs:
+  build:
 
-build:
-  project: TusLibros.sln
-  verbosity: minimal
+    runs-on: ubuntu-latest
 
-test_script:
-- OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\TusLibros.UnitTests\bin\Debug\TusLibros.UnitTests.dll -noshadow" -output:".\project_coverage.xml"
-- codecov -f "project_coverage.xml" -t 8cf7e619-514a-415a-92bb-ce349b3c347d
+    steps:
+    - uses: actions/checkout@v2
 
-after_test:
-- bash <(curl -s https://codecov.io/bash)
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.2.203
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=OpenCover
+
+    - name: Upload
+      run: bash <(curl -s https://codecov.io/bash)
