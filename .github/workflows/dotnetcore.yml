@@ -21,10 +21,14 @@ jobs:
 
     - name: Install dependencies
       run: dotnet restore
+
+    - name: Install tools
       run: dotnet tool install --global coverlet.console
 
-    - name: Build
+    - name: Build Release
       run: dotnet build --configuration Release --no-restore
+
+    - name: Build Debug
       run: dotnet build --configuration Debug --no-restore
 
     - name: Test
