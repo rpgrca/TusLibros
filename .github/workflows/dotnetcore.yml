@@ -21,12 +21,14 @@ jobs:
 
     - name: Install dependencies
       run: dotnet restore
+      run: dotnet tool install --global coverlet.console
 
     - name: Build
       run: dotnet build --configuration Release --no-restore
+      run: dotnet build --configuration Debug --no-restore
 
     - name: Test
-      run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=OpenCover
+      run: coverlet bin/Debug/netcoreapp2.2/TusLibros.UnitTests.dll --target "dotnet" --targetargs "test TusLibros.UnitTests.csproj --no-build --verbosity quiet" --format OpenCover --output coverage.xml
 
     - name: Upload
       run: bash <(curl -s https://codecov.io/bash)
