@@ -7,14 +7,8 @@ namespace TusLibros.UnitTests.MerchantFakes
     {
         private readonly string _transactionIdToReturn;
 
-        public MerchantStubOk(string transactionIdToReturn)
-        {
-            _transactionIdToReturn = transactionIdToReturn;
-        }
+        public MerchantStubOk(string transactionIdToReturn) => _transactionIdToReturn = transactionIdToReturn;
 
-        public string Debit(decimal total, string creditCardNumber)
-        {
-            return _transactionIdToReturn;
-        }
+        public string Debit(decimal total, string creditCardNumber) =>  _transactionIdToReturn;
     }
 }
