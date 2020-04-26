@@ -1,6 +1,6 @@
 using TusLibros;
 
-namespace TusLibros.MerchantFakes
+namespace TusLibros.UnitTests.MerchantFakes
 {
     // Un Stub devuelve un valor fijo, normalmente se inicializa en el constructor.
     public class MerchantStubOk : IMerchantAdapter
