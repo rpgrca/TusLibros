@@ -119,17 +119,6 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
-        public void GivenAValidCashierAndCart_WhenCheckingOutWithValidCreditCard_ThenShouldReturnTransactionId()
-        {
-            var merchantStub = new MerchantStubOk(SUCCESSFUL_TRANSACTION_ID);
-            var cart = GetCartWithOneItem();
-            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), merchantStub);
-
-            var transactionId = cashier.Checkout(cart, VALID_CREDIT_CARD);
-            Assert.Equal(SUCCESSFUL_TRANSACTION_ID, transactionId);
-        }
-
-        [Fact]
         public void GivenACashierWithPricelist_WhenCreatingANewOne_ThenDaybookShouldBeEmpty()
         {
             var cashier = new Cashier(GetPricelistWithOneValidItem(1), new DummyMerchant());
@@ -180,5 +169,62 @@ namespace TusLibros.UnitTests
             items[0] = INVALID_ITEM;
             Assert.Single(cart.GetItems(), VALID_ITEM);
         }
+
+        [Fact]
+        public void GivenACashierCheckout_WhenMerchantReturnsOk_ThenAValidIdIsReturned()
+        {
+            var cart = GetCartWithACatalogWithValidItem();
+            var expectedTransactionId = "abc";
+            cart.Add(VALID_ITEM, 1);
+            var cashier = new Cashier(GetPricelistWithOneValidItem(1), new MerchantStubOk(expectedTransactionId));
+
+            var obtainedTransactionId = cashier.Checkout(cart, VALID_CREDIT_CARD);
+            Assert.Equal(expectedTransactionId, obtainedTransactionId);
+        }
+
+        [Fact]
+        public void GivenACashierCheckout_WhenMerchantDiscoversStolenCard_ThenThrowsAnException()
+        {
+            var cart = GetCartWithACatalogWithValidItem();
+            cart.Add(VALID_ITEM, 1);
+            var cashier = new Cashier(GetPricelistWithOneValidItem(1), new MerchantStolenCardError());
+
+            var exception = Assert.Throws<Exception>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
+            Assert.Equal(Merchant.CARD_IS_STOLEN_ERROR, exception.Message);
+        }
+
+        [Fact]
+        public void Test1()
+        {
+            var cart = GetCartReadyToCheckoutWithTwoItems();
+            var items = cart.GetItems().Count;
+            var cashier = new Cashier(GetPricelistWithTwoValidItems(), new MerchantStolenCardError());
+
+            Assert.Throws<Exception>(() =>  cashier.Checkout(cart, VALID_CREDIT_CARD));
+            Assert.Empty(cashier.GetDaybook());
+        }
+
+        [Fact]
+        public void GivenACashierCheckout_WhenMerchantDiscoversNoMoneyInAccount_ThenThrowsAnException()
+        {
+            var cart = GetCartWithACatalogWithValidItem();
+            cart.Add(VALID_ITEM, 1);
+            var cashier = new Cashier(GetPricelistWithOneValidItem(1), new MerchantNoMoneyInAccountError());
+
+            var exception = Assert.Throws<Exception>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
+            Assert.Equal(Merchant.ACCOUNT_HAS_NO_MONEY_ERROR, exception.Message);
+        }
+
+        [Fact]
+        public void Test2()
+        {
+            var cart = GetCartReadyToCheckoutWithTwoItems();
+            var items = cart.GetItems().Count;
+            var cashier = new Cashier(GetPricelistWithTwoValidItems(), new MerchantNoMoneyInAccountError());
+
+            Assert.Throws<Exception>(() =>  cashier.Checkout(cart, VALID_CREDIT_CARD));
+            Assert.Empty(cashier.GetDaybook());
+        }
+
     }
 }

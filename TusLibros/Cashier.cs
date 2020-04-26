@@ -45,14 +45,17 @@ namespace TusLibros
             {
                 if (_priceList.ContainsKey(i))
                 {
-                    _daybook.Add(i);
                     return _priceList[i];
                 }
 
                 throw new KeyNotFoundException(ITEM_NOT_IN_PRICELIST_ERROR);
             });
 
-            return Debit(total, creditCardNumber);
+            // FIXME: Si el cuarto item es invalido los tres anteriores se agregan al daybook
+            var transactionId = Debit(total, creditCardNumber);
+            _daybook.AddRange(cart.GetItems());
+
+            return transactionId;
         }
 
         protected virtual string Debit(decimal total, string creditCardNumber)
