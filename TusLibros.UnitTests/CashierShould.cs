@@ -173,7 +173,5 @@ namespace TusLibros.UnitTests
             items[0] = INVALID_ITEM;
             Assert.Single(cart.GetItems(), VALID_ITEM);
         }
-
-
     }
 }
