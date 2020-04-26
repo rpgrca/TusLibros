@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace TusLibros
 {
@@ -47,26 +46,32 @@ namespace TusLibros
 
         private YearMonth(int expirationYear, int expirationMonth, int currentYear, int currentMonth)
         {
-            DateTime expirationDate;
-            DateTime currentDate;
+            var expirationDate = CreateDateTime(expirationYear, expirationMonth);
+            var currentDate = CreateDateTime(currentYear, currentMonth);
 
+            VerifyExpirationDate(expirationDate, currentDate);
+
+            Year = expirationYear;
+            Month = expirationMonth;
+        }
+
+        private void VerifyExpirationDate(DateTime expirationDate, DateTime currentDate)
+        {
+            if (DateTime.Compare(expirationDate, currentDate) < 0)
+            {
+                throw new ArgumentException(CARD_HAS_EXPIRED_ERROR);
+            }
+        }
+
+        private DateTime CreateDateTime(int year, int month)
+        {
             try
             {
-                expirationDate = new DateTime(expirationYear, expirationMonth, 1);
-                currentDate = new DateTime(currentYear, currentMonth, 1);
+                return new DateTime(year, month, 1);
             }
             catch (Exception ex)
             {
                 throw new ArgumentException(DATE_IS_INVALID_ERROR, ex);
-            }
-
-            if (DateTime.Compare(expirationDate, currentDate) >= 0) {
-                Year = expirationYear;
-                Month = expirationMonth;
-            }
-            else
-            {
-                throw new ArgumentException(CARD_HAS_EXPIRED_ERROR);
             }
         }
     }
