@@ -127,6 +127,5 @@ namespace TusLibros.UnitTests
             var transactionId = cashier.Checkout(cart, VALID_CREDIT_CARD);
             Assert.Equal(SUCCESSFUL_TRANSACTION_ID, transactionId);
         }
-
     }
 }
