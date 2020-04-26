@@ -26,14 +26,14 @@ namespace TusLibros.UnitTests
         [Fact]
         public void GivenANewCashier_WhenInitializedWithAValidPricelist_ThenItCreatesIt()
         {
-            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), new DummyMerchant());
+            var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
             Assert.NotNull(cashier);
         }
 
         [Fact]
         public void GivenACashierWithPricelist_WhenCheckingOutWithNullCart_ThenThrowsAnException()
         {
-            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), new DummyMerchant());
+            var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
             var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(null, VALID_CREDIT_CARD));
             Assert.Equal(Cashier.CART_IS_NULL_ERROR, exception.Message);
         }
@@ -42,7 +42,7 @@ namespace TusLibros.UnitTests
         public void GivenACashierWithPricelist_WhenCheckingOutWithEmptyCart_ThenThrowsAnException()
         {
             var cart = GetCartWithEmptyCatalog();
-            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), new DummyMerchant());
+            var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
             var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
             Assert.Equal(Cashier.CART_IS_EMPTY_ERROR, exception.Message);
         }
@@ -77,7 +77,7 @@ namespace TusLibros.UnitTests
         {
             var cart = GetCartWithACatalogWithTwoValidItems();
             cart.Add(ANOTHER_VALID_ITEM, 1);
-            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), new DummyMerchant());
+            var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
             var exception = Assert.Throws<KeyNotFoundException>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
             Assert.Equal(Cashier.ITEM_NOT_IN_PRICELIST_ERROR, exception.Message);
         }
