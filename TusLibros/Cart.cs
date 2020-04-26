@@ -2,7 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 
-namespace TusLibros.UnitTests
+namespace TusLibros
 {
     public class Cart
     {
