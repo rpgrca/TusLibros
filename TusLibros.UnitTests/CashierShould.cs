@@ -2,19 +2,12 @@ using System.Collections.Generic;
 using System;
 using Xunit;
 using static TusLibros.UnitTests.Helpers;
-using TusLibros.MerchantFakes;
+using TusLibros.UnitTests.MerchantFakes;
 
 namespace TusLibros.UnitTests
 {
     public class CashierShould
     {
-        private const decimal VALID_PRICE = 10;
-        private const decimal ANOTHER_VALID_PRICE = 3;
-        private const string VALID_CREDIT_CARD = "1234567890123456";
-        private const string INVALID_CREDIT_CARD_NUMBER = "999";
-        private const string ANOTHER_INVALID_CREDIT_CARD_NUMBER = "1234-5678-123411";
-        private const string SUCCESSFUL_TRANSACTION_ID = "Todo bien";
-
         [Fact]
         public void GivenANewCashier_WhenInitializedWithNullPricelist_ThenThrowsAnException()
         {
@@ -133,38 +126,6 @@ namespace TusLibros.UnitTests
 
             var transactionId = cashier.Checkout(cart, VALID_CREDIT_CARD);
             Assert.Equal(SUCCESSFUL_TRANSACTION_ID, transactionId);
-        }
-
-        private Cart GetCartWithOneItem()
-        {
-            var cart = GetCartWithACatalogWithValidItem();
-            cart.Add(VALID_ITEM, 1);
-            return cart;
-        }
-
-        private Cashier GetCashierWithPricelistWithOneItemAndDummyMerchant()
-        {
-            return new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), new DummyMerchant());
-        }
-
-        private Dictionary<object, decimal> GetPricelistWithOneValidItem(decimal price)
-        {
-            return new Dictionary<object, decimal>
-            {
-                { VALID_ITEM, price }
-            };
-        }
-        private Dictionary<object, decimal> GetPricelistWithTwoValidItems()
-        {
-            return new Dictionary<object, decimal>
-            {
-                { VALID_ITEM, VALID_PRICE },
-                { ANOTHER_VALID_ITEM, ANOTHER_VALID_PRICE }
-            };
-        }
-        private Dictionary<object, decimal> GetEmptyPricelist()
-        {
-            return new Dictionary<object, decimal>();
         }
     }
 }
