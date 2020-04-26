@@ -39,12 +39,31 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
+        public void GivenACashierWithPricelist_WhenCheckingOutWithNullCart_ThenTheMerchantHasNotBeenCalled()
+        {
+            var merchantSpy = new MerchantSpy();
+            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), merchantSpy);
+            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(null, VALID_CREDIT_CARD));
+            Assert.Equal(0, merchantSpy.ContactQuantity);
+        }
+
+        [Fact]
         public void GivenACashierWithPricelist_WhenCheckingOutWithEmptyCart_ThenThrowsAnException()
         {
             var cart = GetCartWithEmptyCatalog();
             var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
             var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
             Assert.Equal(Cashier.CART_IS_EMPTY_ERROR, exception.Message);
+        }
+
+        [Fact]
+        public void GivenACashierWithPricelist_WhenCheckingOutWithEmptyCart_ThenTheMerchantHasNotBeenCalled()
+        {
+            var merchantSpy = new MerchantSpy();
+            var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), merchantSpy);
+            var cart = GetCartWithEmptyCatalog();
+            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
+            Assert.Equal(0, merchantSpy.ContactQuantity);
         }
 
         [Theory]
@@ -106,10 +125,8 @@ namespace TusLibros.UnitTests
 
         // TODO: Nombre
         // TODO: Fecha vencimiento
-        // TODO: Clave
         // TODO: Modelar clase tarjeta de crédito
         // TODO: Unir catalogo y lista de precios
-        // TODO: Book sale
 
         [Fact]
         public void GivenAValidPricelist_WhenCreatingCashierWithNullMerchant_ThenThrowsAnException()
@@ -194,7 +211,7 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
-        public void Test1()
+        public void GivenACashierCheckout_WhenMerchantDiscoversStolenCard_ThenItemsAreNotIncludedInDaybook()
         {
             var cart = GetCartReadyToCheckoutWithTwoItems();
             var items = cart.GetItems().Count;
@@ -216,7 +233,7 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
-        public void Test2()
+        public void GivenACashierCheckout_WhenMerchantDiscoversNoMoneyInAccount_ThenItemsAreNotIncludedInDaybook()
         {
             var cart = GetCartReadyToCheckoutWithTwoItems();
             var items = cart.GetItems().Count;
