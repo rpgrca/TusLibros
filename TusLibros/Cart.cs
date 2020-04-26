@@ -11,12 +11,7 @@ namespace TusLibros
         private readonly List<object> _items;
         private readonly List<object> _catalog;
 
-        public List<object> GetBooks()
-        {
-            var itemsToReturn = new List<object>();
-            _items.ForEach(p => itemsToReturn.Add(p));
-            return itemsToReturn;
-        }
+        public List<object> GetItems() => new List<object>(_items);
 
         public int Count => _items.Count;
 

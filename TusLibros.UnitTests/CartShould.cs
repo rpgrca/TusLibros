@@ -59,7 +59,7 @@ namespace TusLibros.UnitTests
         public void WhenCreatingANewCart_ThenTheCartHasNoBooks()
         {
             var cart = GetCartWithEmptyCatalog();
-            Assert.Empty(cart.GetBooks());
+            Assert.Empty(cart.GetItems());
         }
 
         [Theory]
@@ -96,7 +96,7 @@ namespace TusLibros.UnitTests
         public void GivenANewCartAndACopyOfItems_WhenAddingAnItemToCart_ThenTheCopyOfItemsDidNotAddTheItem()
         {
             var cart = GetCartWithACatalogWithValidItem();
-            var items = cart.GetBooks();
+            var items = cart.GetItems();
             cart.Add(VALID_ITEM, 1);
 
             Assert.NotEqual(items.Count, cart.Count);
@@ -108,9 +108,9 @@ namespace TusLibros.UnitTests
             var cart = GetCartWithACatalogWithValidItem();
             cart.Add(VALID_ITEM, 1);
 
-            var items = cart.GetBooks();
+            var items = cart.GetItems();
             items[0] = INVALID_ITEM;
-            Assert.Single(cart.GetBooks(), VALID_ITEM);
+            Assert.Single(cart.GetItems(), VALID_ITEM);
         }
 
         [Fact]
