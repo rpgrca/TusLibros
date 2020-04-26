@@ -21,6 +21,13 @@ namespace TusLibros.UnitTests
         public static Cart GetCartWithACatalogWithValidItem() => new Cart(GetCatalogWithValidItem());
         public static Cart GetCartWithACatalogWithTwoValidItems() => new Cart(GetCatalogWithTwoValidItems());
         public static Cart GetCartWithEmptyCatalog() => new Cart(new List<object>());
+        public static Cart GetCartReadyToCheckoutWithTwoItems()
+        {
+            var cart = GetCartWithACatalogWithTwoValidItems();
+            cart.Add(VALID_ITEM, 1);
+            cart.Add(ANOTHER_VALID_ITEM, 2);
+            return cart;
+        }
 
         public static Cart GetCartWithOneItem()
         {
