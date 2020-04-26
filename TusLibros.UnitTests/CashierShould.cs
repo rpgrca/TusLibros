@@ -129,6 +129,13 @@ namespace TusLibros.UnitTests
             Assert.Equal(SUCCESSFUL_TRANSACTION_ID, transactionId);
         }
 
+        [Fact]
+        public void GivenACashierWithPricelist_WhenCreatingANewOne_ThenDaybookShouldBeEmpty()
+        {
+            var cashier = new Cashier(GetPricelistWithOneValidItem(1), new DummyMerchant());
+            Assert.Empty(cashier.GetDaybook());
+        }
+
         [Theory]
         [InlineData(1)]
         [InlineData(10)]
