@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System;
 using Xunit;
@@ -126,6 +127,58 @@ namespace TusLibros.UnitTests
 
             var transactionId = cashier.Checkout(cart, VALID_CREDIT_CARD);
             Assert.Equal(SUCCESSFUL_TRANSACTION_ID, transactionId);
+        }
+
+        [Fact]
+        public void GivenACashierWithPricelist_WhenCreatingANewOne_ThenDaybookShouldBeEmpty()
+        {
+            var cashier = new Cashier(GetPricelistWithOneValidItem(1), new DummyMerchant());
+            Assert.Empty(cashier.GetDaybook());
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(10)]
+        public void GivenACashierWithPriceList_WhenCheckingOutCartWithOneItem_ThenAddsItToDaybook(int quantity)
+        {
+            var cart = GetCartWithACatalogWithValidItem();
+            cart.Add(VALID_ITEM, quantity);
+            var cashier = new Cashier(GetPricelistWithOneValidItem(5), new DummyMerchant());
+            cashier.Checkout(cart, VALID_CREDIT_CARD);
+            Assert.Equal(quantity, cashier.GetDaybook().Count);
+        }
+
+        [Fact]
+        public void GivenACashierWithPriceList_WhenCheckingOutCartWithSeveralItems_ThenAddsThemToDaybook()
+        {
+            var cart = GetCartReadyToCheckoutWithTwoItems();
+            var cashier = new Cashier(GetPricelistWithTwoValidItems(), new DummyMerchant());
+            cashier.Checkout(cart, VALID_CREDIT_CARD);
+            Assert.Equal(3, cashier.GetDaybook().Count);
+        }
+
+        [Fact]
+        public void GivenACashierDaybook_WhenAddingItemsToDaybook_ThenTheCashierDaybookDidNotChange()
+        {
+            var cart = GetCartReadyToCheckoutWithTwoItems();
+            var items = cart.GetItems().Count;
+            var cashier = new Cashier(GetPricelistWithTwoValidItems(), new DummyMerchant());
+            cashier.Checkout(cart, VALID_CREDIT_CARD);
+
+            var daybook = cashier.GetDaybook();
+            daybook.Add(new object());
+            Assert.Equal(items, cashier.GetDaybook().Count);
+        }
+
+        [Fact]
+        public void GivenANewCartWithAnItem_WhenChangingTheItemInTheCopyOfItems_ThenTheCartDidNotChange()
+        {
+            var cart = GetCartWithACatalogWithValidItem();
+            cart.Add(VALID_ITEM, 1);
+
+            var items = cart.GetItems();
+            items[0] = INVALID_ITEM;
+            Assert.Single(cart.GetItems(), VALID_ITEM);
         }
     }
 }

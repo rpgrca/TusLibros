@@ -6,8 +6,8 @@ namespace TusLibros.UnitTests.MerchantFakes
     public class MerchantSpy : IMerchantAdapter
     {
         public const string TRANSACTION_ID = "TODO_OK";
-        public decimal SavedTotal = default;
-        public string SavedCreditCardNumber = default;
+        public decimal SavedTotal;
+        public string SavedCreditCardNumber;
 
         public string Debit(decimal total, string creditCardNumber)
         {

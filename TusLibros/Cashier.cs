@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using System;
-using TusLibros.UnitTests;
 
 namespace TusLibros
 {
@@ -17,6 +16,7 @@ namespace TusLibros
         public const string MERCHANT_ADAPTER_IS_NULL_ERROR = "El Merchant Adapter no puede no existir";
 
         private readonly Dictionary<object, decimal> _priceList;
+        private readonly List<object> _daybook;
         private readonly IMerchantAdapter _merchantAdapter;
 
         public Cashier(Dictionary<object, decimal> priceList, IMerchantAdapter merchantAdapter)
@@ -28,6 +28,7 @@ namespace TusLibros
             }
 
             _merchantAdapter = merchantAdapter ?? throw new ArgumentException(MERCHANT_ADAPTER_IS_NULL_ERROR);
+            _daybook = new List<object>();
         }
 
         public string Checkout(Cart cart, string creditCardNumber)
@@ -40,10 +41,11 @@ namespace TusLibros
 
             ValidateCreditCard(creditCardNumber);
 
-            var total = cart.GetBooks().Sum(i =>
+            var total = cart.GetItems().Sum(i =>
             {
                 if (_priceList.ContainsKey(i))
                 {
+                    _daybook.Add(i);
                     return _priceList[i];
                 }
 
@@ -75,5 +77,7 @@ namespace TusLibros
                 throw new ArgumentException(CREDIT_CARD_NUMBER_IS_INVALID_ERROR);
             }
         }
+
+        public List<object> GetDaybook() => new List<object>(_daybook);
     }
 }
