@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Xunit;
 using static TusLibros.UnitTests.Helpers;
 
@@ -50,37 +51,51 @@ namespace TusLibros.UnitTests
             Assert.Equal(YearMonth.DATE_IS_INVALID_ERROR, exception.Message);
         }
 
-        [Fact]
-        public void GivenACurrentDateHigherThanExpirationDate_WhenCreatingACreditCard_ThenAnExceptionIsThrown()
+        [Theory]
+        [InlineData(VALID_YEAR - 1, VALID_MONTH)]
+        [InlineData(VALID_YEAR, VALID_MONTH - 1)]
+        public void GivenACurrentDateHigherThanExpirationDate_WhenCreatingACreditCard_ThenAnExceptionIsThrown(int expirationYear, int expirationMonth)
         {
             var builder = new CreditCard.Builder()
                 .Numbered(VALID_CREDIT_CARD_NUMBER)
                 .OwnedBy(VALID_CREDIT_CARD_OWNER)
-                .ExpiresOn(1989, 12)
-                .CheckingOn(1990, 1);
+                .ExpiresOn(expirationYear, expirationMonth)
+                .CheckingOn(VALID_YEAR, VALID_MONTH);
 
             var exception = Assert.Throws<ArgumentException>(() => builder.Build());
             Assert.Equal(CreditCard.CARD_HAS_EXPIRED_ERROR, exception.Message);
         }
 
         [Theory]
-        [InlineData(VALID_YEAR + 1, VALID_MONTH)]
-        [InlineData(VALID_YEAR, VALID_MONTH + 1)]
-        [InlineData(VALID_YEAR, VALID_MONTH)]
-        public void GivenACurrentDateEqualOrLowerThanExpirationDate_WhenCreatingAYearMonth_ThenReturnsIt(int expirationYear, int expirationMonth)
+        [MemberData(nameof(GetValidCreditCardInformation))]
+        public void GivenACurrentDateEqualOrLowerThanExpirationDate_WhenCreatingAYearMonth_ThenReturnsIt(string owner, int expirationYear, int expirationMonth)
         {
             var creditCard = new CreditCard.Builder()
                 .Numbered(VALID_CREDIT_CARD_NUMBER)
-                .OwnedBy(VALID_CREDIT_CARD_OWNER)
+                .OwnedBy(owner)
                 .ExpiresOn(expirationYear, expirationMonth)
                 .CheckingOn(VALID_YEAR, VALID_MONTH)
                 .Build();
 
             Assert.NotNull(creditCard);
             Assert.Equal(VALID_CREDIT_CARD_NUMBER, creditCard.Number);
-            Assert.Equal(VALID_CREDIT_CARD_OWNER, creditCard.Owner);
+            Assert.Equal(owner, creditCard.Owner);
             Assert.Equal(expirationYear, creditCard.ExpirationDate.Year);
             Assert.Equal(expirationMonth, creditCard.ExpirationDate.Month);
+        }
+
+        public static IEnumerable<object[]> GetValidCreditCardInformation()
+        {
+            foreach (var owner in new [] { VALID_CREDIT_CARD_OWNER, ANOTHER_VALID_CREDIT_CARD_OWNER, YET_ANOTHER_VALID_CREDIT_CARD_OWNER })
+            {
+                foreach (var expirationYear in new [] { VALID_YEAR + 1, VALID_YEAR })
+                {
+                    foreach (var expirationMonth in new [] { VALID_MONTH + 1, VALID_MONTH })
+                    {
+                        yield return new object[] { owner, expirationYear, expirationMonth };
+                    }
+                }
+            }
         }
     }
 }
