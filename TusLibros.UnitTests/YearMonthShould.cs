@@ -64,6 +64,24 @@ namespace TusLibros.UnitTests
             Assert.False(comparison);
         }
 
+        [Fact]
+        public void GivenSameYearMonth_WhenComparingForSmaller_ThenReturnsFalse()
+        {
+            var firstYearMonth = new YearMonth(VALID_YEAR, VALID_MONTH);
+            var secondYearMonth = new YearMonth(VALID_YEAR, VALID_MONTH);
+            var comparison = firstYearMonth < secondYearMonth;
+            Assert.False(comparison);
+        }
+
+        [Fact]
+        public void GivenSameYearMonth_WhenComparingForBigger_ThenReturnsFalse()
+        {
+            var firstYearMonth = new YearMonth(VALID_YEAR, VALID_MONTH);
+            var secondYearMonth = new YearMonth(VALID_YEAR, VALID_MONTH);
+            var comparison = firstYearMonth > secondYearMonth;
+            Assert.False(comparison);
+        }
+
         // TODO: GivenTwoDifferentYearMonths_WhenComparingEqual_ThenReturnsFalse
         // TODO: GivenTwoEqualYearMonths_WhenComparingOlder_ThenReturnsFalse
         // TODO: GivenTwoEqualYearMonths_WhenComparingNewer_ThenReturnsFalse
