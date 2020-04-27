@@ -1,0 +1,11 @@
+{
+    "stryker-config":
+    {
+        "test-runner": "vstest",
+        "reporters": [ "progress", "cleartext", "html" ],
+        "solution-path": "..\\TusLibros.sln",
+        "project-file": "TusLibros.csproj",
+        "ignore-methods": ["ConfigureAwait", "Dispose"],
+        "coverage-analysis": "all"
+    }
+}
