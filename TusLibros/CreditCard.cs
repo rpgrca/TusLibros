@@ -71,7 +71,7 @@ namespace TusLibros
 
             Number = number;
             Owner = owner;
-            ExpirationDate = expirationDate ?? throw new ArgumentException(NUMBER_IS_NULL_ERROR);
+            ExpirationDate = expirationDate;
         }
 
         private void ValidateNumber(string creditCardNumber)
