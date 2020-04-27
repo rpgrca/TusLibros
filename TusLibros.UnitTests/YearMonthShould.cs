@@ -57,6 +57,8 @@ namespace TusLibros.UnitTests
                 .Build();
 
             Assert.NotNull(yearMonth);
+            Assert.Equal(expirationYear, yearMonth.Year);
+            Assert.Equal(expirationMonth, yearMonth.Month);
         }
     }
 }
