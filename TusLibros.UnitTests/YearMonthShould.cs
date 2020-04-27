@@ -16,21 +16,51 @@ namespace TusLibros.UnitTests
             Assert.Equal(YearMonth.DATE_IS_INVALID_ERROR, exception.Message);
         }
 
-        [Fact]
-        public void GivenTwoDifferentYearMonths_WhenComparingOlder_ThenItChecksCorrectly()
+        [Theory]
+        [InlineData(VALID_YEAR - 1, VALID_MONTH)]
+        [InlineData(VALID_YEAR, VALID_MONTH - 1)]
+        [InlineData(VALID_YEAR - 1, VALID_MONTH - 1)]
+        public void GivenTwoDifferentYearMonths_WhenComparingOlderIsSmaller_ThenReturnsTrue(int year, int month)
         {
-            var olderYearMonth = new YearMonth(1999, 12);
-            var newerYearMonth = new YearMonth(2020, 4);
+            var olderYearMonth = new YearMonth(year, month);
+            var newerYearMonth = new YearMonth(VALID_YEAR, VALID_MONTH);
             var comparison = olderYearMonth < newerYearMonth;
             Assert.True(comparison);
         }
 
-        [Fact]
-        public void GivenTwoDifferentYearMonths_WhenComparingNewer_ThenItChecksCorrectly()
+        [Theory]
+        [InlineData(VALID_YEAR - 1, VALID_MONTH)]
+        [InlineData(VALID_YEAR, VALID_MONTH - 1)]
+        [InlineData(VALID_YEAR - 1, VALID_MONTH - 1)]
+        public void GivenTwoDifferentYearMonths_WhenComparingOlderIsBigger_ThenReturnsFalse(int year, int month)
         {
-            var olderYearMonth = new YearMonth(1999, 12);
-            var newerYearMonth = new YearMonth(2020, 4);
+            var olderYearMonth = new YearMonth(year, month);
+            var newerYearMonth = new YearMonth(VALID_YEAR, VALID_MONTH);
             var comparison = olderYearMonth > newerYearMonth;
+            Assert.False(comparison);
+        }
+
+        [Theory]
+        [InlineData(VALID_YEAR - 1, VALID_MONTH)]
+        [InlineData(VALID_YEAR, VALID_MONTH - 1)]
+        [InlineData(VALID_YEAR - 1, VALID_MONTH - 1)]
+        public void GivenTwoDifferentYearMonths_WhenComparingNewerIsBigger_ThenReturnsTrue(int year, int month)
+        {
+            var olderYearMonth = new YearMonth(year, month);
+            var newerYearMonth = new YearMonth(VALID_YEAR, VALID_MONTH);
+            var comparison = newerYearMonth > olderYearMonth;
+            Assert.True(comparison);
+        }
+
+        [Theory]
+        [InlineData(VALID_YEAR - 1, VALID_MONTH)]
+        [InlineData(VALID_YEAR, VALID_MONTH - 1)]
+        [InlineData(VALID_YEAR - 1, VALID_MONTH - 1)]
+        public void GivenTwoDifferentYearMonths_WhenComparingNewerIsSmaller_ThenReturnsFalse(int year, int month)
+        {
+            var olderYearMonth = new YearMonth(year, month);
+            var newerYearMonth = new YearMonth(VALID_YEAR, VALID_MONTH);
+            var comparison = newerYearMonth < olderYearMonth;
             Assert.False(comparison);
         }
 
