@@ -1,6 +1,5 @@
 using System;
 using Xunit;
-using System.Collections.Generic;
 using static TusLibros.UnitTests.Helpers;
 
 namespace TusLibros.UnitTests
@@ -188,17 +187,3 @@ namespace TusLibros.UnitTests
         }
     }
 }
-
-// Iteracion 2
-// TODO: Cashier tratando de checkout carrito vacio
-// TODO: checkout de un carrito con un elemento
-// TODO: Tener precio
-// TODO: Calcular total precio producto
-//
-// TODO: Tarjeta vencida
-// TODO: Tarjeta valida
-// TODO: Tarjeta robada
-// TODO: Cashier.Debit(total a cobrar)
-
-// Iteracion 3
-// TODO: Merchant
