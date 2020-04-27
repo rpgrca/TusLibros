@@ -30,6 +30,14 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
+        public void GivenANewCashier_WhenInitializedWithAValidPricelist_ThenTheMerchantIsNotCalled()
+        {
+            var merchantSpy = new MerchantSpy();
+            var _ = new Cashier(GetPricelistWithOneValidItem(1), merchantSpy);
+            Assert.Equal(0, merchantSpy.ContactQuantity);
+        }
+
+        [Fact]
         public void GivenACashierWithPricelist_WhenCheckingOutWithNullCart_ThenThrowsAnException()
         {
             var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
@@ -38,11 +46,11 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
-        public void GivenACashierWithPricelist_WhenCheckingOutWithNullCart_ThenTheMerchantHasNotBeenCalled()
+        public void GivenACashierWithPricelist_WhenCheckingOutWithNullCart_ThenTheMerchantIsNotCalled()
         {
             var merchantSpy = new MerchantSpy();
             var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), merchantSpy);
-            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(null, GetValidCreditCard()));
+            Assert.Throws<ArgumentException>(() => cashier.Checkout(null, GetValidCreditCard()));
             Assert.Equal(0, merchantSpy.ContactQuantity);
         }
 
@@ -56,12 +64,12 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
-        public void GivenACashierWithPricelist_WhenCheckingOutWithEmptyCart_ThenTheMerchantHasNotBeenCalled()
+        public void GivenACashierWithPricelist_WhenCheckingOutWithEmptyCart_ThenTheMerchantIsNotCalled()
         {
             var merchantSpy = new MerchantSpy();
             var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), merchantSpy);
             var cart = GetCartWithEmptyCatalog();
-            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, GetValidCreditCard()));
+            Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, GetValidCreditCard()));
             Assert.Equal(0, merchantSpy.ContactQuantity);
         }
 
@@ -79,6 +87,17 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
+        public void GivenACashierWithPricelist_WhenCheckingOutCartWithItem_ThenTheMerchantIsCalledOnce()
+        {
+            var merchantSpy = new MerchantSpy();
+            var cart = GetCartWithACatalogWithValidItem();
+            cart.Add(VALID_ITEM, 1);
+            var cashier = new Cashier(GetPricelistWithOneValidItem(1), merchantSpy);
+            cashier.Checkout(cart, GetValidCreditCard());
+            Assert.Equal(1, merchantSpy.ContactQuantity);
+        }
+
+        [Fact]
         public void GivenACashierWithPricelist_WhenCheckingOutCartWithSeveralItems_ThenCalculatesTheTotalSum()
         {
             var merchantSpy = new MerchantSpy();
@@ -88,6 +107,18 @@ namespace TusLibros.UnitTests
             var cashier = new Cashier(GetPricelistWithTwoValidItems(), merchantSpy);
             cashier.Checkout(cart, GetValidCreditCard());
             Assert.Equal(22, merchantSpy.SavedTotal);
+        }
+
+        [Fact]
+        public void GivenACashierWithPricelist_WhenCheckingOutCartWithSeveralItems_ThenTheMerchantIsCalledOnce()
+        {
+            var merchantSpy = new MerchantSpy();
+            var cart = GetCartWithACatalogWithTwoValidItems();
+            cart.Add(VALID_ITEM, 1);
+            cart.Add(ANOTHER_VALID_ITEM, 4);
+            var cashier = new Cashier(GetPricelistWithTwoValidItems(), merchantSpy);
+            cashier.Checkout(cart, GetValidCreditCard());
+            Assert.Equal(1, merchantSpy.ContactQuantity);
         }
 
         [Fact]
@@ -101,6 +132,27 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
+        public void GivenACashierWithPricelist_WhenCheckingOutCartWithInvalidItem_ThenTheDailybookIsNotUpdated()
+        {
+            var cart = GetCartWithACatalogWithTwoValidItems();
+            cart.Add(ANOTHER_VALID_ITEM, 1);
+            var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
+            Assert.Throws<KeyNotFoundException>(() => cashier.Checkout(cart, GetValidCreditCard()));
+            Assert.Empty(cashier.GetDaybook());
+        }
+
+        [Fact]
+        public void GivenACashierWithPricelist_WhenCheckingOutCartWithInvalidItem_ThenTheMerchantIsNotCalled()
+        {
+            var merchantSpy = new MerchantSpy();
+            var cart = GetCartWithACatalogWithTwoValidItems();
+            cart.Add(ANOTHER_VALID_ITEM, 1);
+            var cashier = new Cashier(GetPricelistWithOneValidItem(1), merchantSpy);
+            Assert.Throws<KeyNotFoundException>(() => cashier.Checkout(cart, GetValidCreditCard()));
+            Assert.Equal(0, merchantSpy.ContactQuantity);
+        }
+
+        [Fact]
         public void GivenAValidCashierAndCart_WhenCheckingOutWithNullCreditCardNumber_ThenThrowsAnException()
         {
             var cart = GetCartWithOneItem();
@@ -108,6 +160,17 @@ namespace TusLibros.UnitTests
 
             var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, null));
             Assert.Equal(CreditCard.NUMBER_IS_NULL_ERROR, exception.Message);
+        }
+
+        [Fact]
+        public void GivenAValidCashierAndCart_WhenCheckingOutWithNullCreditCardNumber_ThenTheMerchantIsNotCalled()
+        {
+            var merchantSpy = new MerchantSpy();
+            var cart = GetCartWithOneItem();
+            var cashier = new Cashier(GetPricelistWithOneValidItem(1), merchantSpy);
+
+            Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, null));
+            Assert.Equal(0, merchantSpy.ContactQuantity);
         }
 
         [Fact]
@@ -127,7 +190,7 @@ namespace TusLibros.UnitTests
         [Theory]
         [InlineData(1)]
         [InlineData(10)]
-        public void GivenACashierWithPriceList_WhenCheckingOutCartWithOneItem_ThenAddsItToDaybook(int quantity)
+        public void GivenACashierWithPriceList_WhenCheckingOutCartWithOneItemSuccessfully_ThenAddsItToDaybook(int quantity)
         {
             var cart = GetCartWithACatalogWithValidItem();
             cart.Add(VALID_ITEM, quantity);
@@ -137,7 +200,7 @@ namespace TusLibros.UnitTests
         }
 
         [Fact]
-        public void GivenACashierWithPriceList_WhenCheckingOutCartWithSeveralItems_ThenAddsThemToDaybook()
+        public void GivenACashierWithPriceList_WhenCheckingOutCartWithSeveralItemsSuccessfully_ThenAddsThemToDaybook()
         {
             var cart = GetCartReadyToCheckoutWithTwoItems();
             var cashier = new Cashier(GetPricelistWithTwoValidItems(), new DummyMerchant());
@@ -172,8 +235,8 @@ namespace TusLibros.UnitTests
         [Fact]
         public void GivenACashierCheckout_WhenMerchantReturnsOk_ThenAValidIdIsReturned()
         {
+            const string expectedTransactionId = "abc";
             var cart = GetCartWithACatalogWithValidItem();
-            var expectedTransactionId = "abc";
             cart.Add(VALID_ITEM, 1);
             var cashier = new Cashier(GetPricelistWithOneValidItem(1), new MerchantStubOk(expectedTransactionId));
 
