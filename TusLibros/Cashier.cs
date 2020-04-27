@@ -29,6 +29,7 @@ namespace TusLibros
             _daybook = new List<object>();
         }
 
+        // TODO: Retornar un ticket con informacion de la venta
         public string Checkout(Cart cart, CreditCard creditCard)
         {
             _ = cart ?? throw new ArgumentException(CART_IS_NULL_ERROR);
@@ -54,7 +55,7 @@ namespace TusLibros
             return transactionId;
         }
 
-        protected virtual string Debit(decimal total, CreditCard creditCard) =>
+        private string Debit(decimal total, CreditCard creditCard) =>
             _merchantAdapter.Debit(total, creditCard);
 
         public List<object> GetDaybook() => new List<object>(_daybook);
