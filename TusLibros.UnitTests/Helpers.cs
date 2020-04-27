@@ -20,6 +20,8 @@ namespace TusLibros.UnitTests
         public const string ANOTHER_INVALID_CREDIT_CARD_NUMBER = "1234-5678-123411";
         public const string SUCCESSFUL_TRANSACTION_ID = "Todo bien";
         public const string VALID_CREDIT_CARD_OWNER = "Juan Perez";
+        public const string ANOTHER_VALID_CREDIT_CARD_OWNER = "Nombre con 30 letras de largo.";
+        public const string YET_ANOTHER_VALID_CREDIT_CARD_OWNER = "A";
         public const string INVALID_CREDIT_CARD_OWNER = "";
         public const string ANOTHER_INVALID_CREDIT_CARD_OWNER ="Este es un nombre con más de 30 caracteres.";
 
