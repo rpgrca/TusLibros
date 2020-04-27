@@ -35,13 +35,5 @@ namespace TusLibros
         {
             return lhs.Year > rhs.Year || (lhs.Year == rhs.Year && lhs.Month > rhs.Month);
         }
-/*
-        private void VerifyExpirationDate(DateTime expirationDate, DateTime currentDate)
-        {
-            if (DateTime.Compare(expirationDate, currentDate) < 0)
-            {
-                throw new ArgumentException(CARD_HAS_EXPIRED_ERROR);
-            }
-        }*/
     }
 }
