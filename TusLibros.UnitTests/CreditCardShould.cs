@@ -77,6 +77,8 @@ namespace TusLibros.UnitTests
                 .Build();
 
             Assert.NotNull(creditCard);
+            Assert.Equal(VALID_CREDIT_CARD_NUMBER, creditCard.Number);
+            Assert.Equal(VALID_CREDIT_CARD_OWNER, creditCard.Owner);
             Assert.Equal(expirationYear, creditCard.ExpirationDate.Year);
             Assert.Equal(expirationMonth, creditCard.ExpirationDate.Month);
         }
