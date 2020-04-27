@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System;
 using Xunit;
@@ -110,11 +109,6 @@ namespace TusLibros.UnitTests
             var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, null));
             Assert.Equal(CreditCard.NUMBER_IS_NULL_ERROR, exception.Message);
         }
-
-        // TODO: Nombre
-        // TODO: Fecha vencimiento
-        // TODO: Modelar clase tarjeta de crédito
-        // TODO: Unir catalogo y lista de precios
 
         [Fact]
         public void GivenAValidPricelist_WhenCreatingCashierWithNullMerchant_ThenThrowsAnException()
