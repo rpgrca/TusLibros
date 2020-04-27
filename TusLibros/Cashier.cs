@@ -54,10 +54,8 @@ namespace TusLibros
             return transactionId;
         }
 
-        protected virtual string Debit(decimal total, CreditCard creditCard)
-        {
-            return _merchantAdapter.Debit(total, creditCard);
-        }
+        protected virtual string Debit(decimal total, CreditCard creditCard) =>
+            _merchantAdapter.Debit(total, creditCard);
 
         public List<object> GetDaybook() => new List<object>(_daybook);
     }
