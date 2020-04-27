@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TusLibros\TusLibros.csproj" />
+    <ProjectReference Include="..\TusLibros.API\TusLibros.API.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Coverage' ">
