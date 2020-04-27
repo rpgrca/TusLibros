@@ -34,7 +34,7 @@ namespace TusLibros.UnitTests
         public void GivenACashierWithPricelist_WhenCheckingOutWithNullCart_ThenThrowsAnException()
         {
             var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
-            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(null, VALID_CREDIT_CARD));
+            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(null, GetValidCreditCard()));
             Assert.Equal(Cashier.CART_IS_NULL_ERROR, exception.Message);
         }
 
@@ -43,7 +43,7 @@ namespace TusLibros.UnitTests
         {
             var merchantSpy = new MerchantSpy();
             var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), merchantSpy);
-            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(null, VALID_CREDIT_CARD));
+            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(null, GetValidCreditCard()));
             Assert.Equal(0, merchantSpy.ContactQuantity);
         }
 
@@ -52,7 +52,7 @@ namespace TusLibros.UnitTests
         {
             var cart = GetCartWithEmptyCatalog();
             var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
-            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
+            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, GetValidCreditCard()));
             Assert.Equal(Cashier.CART_IS_EMPTY_ERROR, exception.Message);
         }
 
@@ -62,7 +62,7 @@ namespace TusLibros.UnitTests
             var merchantSpy = new MerchantSpy();
             var cashier = new Cashier(GetPricelistWithOneValidItem(VALID_PRICE), merchantSpy);
             var cart = GetCartWithEmptyCatalog();
-            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
+            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, GetValidCreditCard()));
             Assert.Equal(0, merchantSpy.ContactQuantity);
         }
 
@@ -75,7 +75,7 @@ namespace TusLibros.UnitTests
             var cart = GetCartWithACatalogWithValidItem();
             cart.Add(VALID_ITEM, 1);
             var cashier = new Cashier(GetPricelistWithOneValidItem(price), merchantSpy);
-            cashier.Checkout(cart, VALID_CREDIT_CARD);
+            cashier.Checkout(cart, GetValidCreditCard());
             Assert.Equal(merchantSpy.SavedTotal, price);
         }
 
@@ -87,7 +87,7 @@ namespace TusLibros.UnitTests
             cart.Add(VALID_ITEM, 1);
             cart.Add(ANOTHER_VALID_ITEM, 4);
             var cashier = new Cashier(GetPricelistWithTwoValidItems(), merchantSpy);
-            cashier.Checkout(cart, VALID_CREDIT_CARD);
+            cashier.Checkout(cart, GetValidCreditCard());
             Assert.Equal(22, merchantSpy.SavedTotal);
         }
 
@@ -97,7 +97,7 @@ namespace TusLibros.UnitTests
             var cart = GetCartWithACatalogWithTwoValidItems();
             cart.Add(ANOTHER_VALID_ITEM, 1);
             var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
-            var exception = Assert.Throws<KeyNotFoundException>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
+            var exception = Assert.Throws<KeyNotFoundException>(() => cashier.Checkout(cart, GetValidCreditCard()));
             Assert.Equal(Cashier.ITEM_NOT_IN_PRICELIST_ERROR, exception.Message);
         }
 
@@ -108,19 +108,7 @@ namespace TusLibros.UnitTests
             var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
 
             var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, null));
-            Assert.Equal(Cashier.CREDIT_CARD_NUMBER_IS_NULL_ERROR, exception.Message);
-        }
-
-        [Theory]
-        [InlineData(INVALID_CREDIT_CARD_NUMBER)]
-        [InlineData(ANOTHER_INVALID_CREDIT_CARD_NUMBER)]
-        public void GivenAValidCashierAndCart_WhenCheckingOutWithInvalidCreditCardNumber_ThenThrowsAnException(string invalidCard)
-        {
-            var cart = GetCartWithOneItem();
-            var cashier = GetCashierWithPricelistWithOneItemAndDummyMerchant();
-
-            var exception = Assert.Throws<ArgumentException>(() => cashier.Checkout(cart, invalidCard));
-            Assert.Equal(Cashier.CREDIT_CARD_NUMBER_IS_INVALID_ERROR, exception.Message);
+            Assert.Equal(CreditCard.NUMBER_IS_NULL_ERROR, exception.Message);
         }
 
         // TODO: Nombre
@@ -150,7 +138,7 @@ namespace TusLibros.UnitTests
             var cart = GetCartWithACatalogWithValidItem();
             cart.Add(VALID_ITEM, quantity);
             var cashier = new Cashier(GetPricelistWithOneValidItem(5), new DummyMerchant());
-            cashier.Checkout(cart, VALID_CREDIT_CARD);
+            cashier.Checkout(cart, GetValidCreditCard());
             Assert.Equal(quantity, cashier.GetDaybook().Count);
         }
 
@@ -159,7 +147,7 @@ namespace TusLibros.UnitTests
         {
             var cart = GetCartReadyToCheckoutWithTwoItems();
             var cashier = new Cashier(GetPricelistWithTwoValidItems(), new DummyMerchant());
-            cashier.Checkout(cart, VALID_CREDIT_CARD);
+            cashier.Checkout(cart, GetValidCreditCard());
             Assert.Equal(3, cashier.GetDaybook().Count);
         }
 
@@ -169,7 +157,7 @@ namespace TusLibros.UnitTests
             var cart = GetCartReadyToCheckoutWithTwoItems();
             var items = cart.GetItems().Count;
             var cashier = new Cashier(GetPricelistWithTwoValidItems(), new DummyMerchant());
-            cashier.Checkout(cart, VALID_CREDIT_CARD);
+            cashier.Checkout(cart, GetValidCreditCard());
 
             var daybook = cashier.GetDaybook();
             daybook.Add(new object());
@@ -195,7 +183,7 @@ namespace TusLibros.UnitTests
             cart.Add(VALID_ITEM, 1);
             var cashier = new Cashier(GetPricelistWithOneValidItem(1), new MerchantStubOk(expectedTransactionId));
 
-            var obtainedTransactionId = cashier.Checkout(cart, VALID_CREDIT_CARD);
+            var obtainedTransactionId = cashier.Checkout(cart, GetValidCreditCard());
             Assert.Equal(expectedTransactionId, obtainedTransactionId);
         }
 
@@ -206,7 +194,7 @@ namespace TusLibros.UnitTests
             cart.Add(VALID_ITEM, 1);
             var cashier = new Cashier(GetPricelistWithOneValidItem(1), new MerchantStolenCardError());
 
-            var exception = Assert.Throws<Exception>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
+            var exception = Assert.Throws<Exception>(() => cashier.Checkout(cart, GetValidCreditCard()));
             Assert.Equal(Merchant.CARD_IS_STOLEN_ERROR, exception.Message);
         }
 
@@ -217,7 +205,7 @@ namespace TusLibros.UnitTests
             var items = cart.GetItems().Count;
             var cashier = new Cashier(GetPricelistWithTwoValidItems(), new MerchantStolenCardError());
 
-            Assert.Throws<Exception>(() =>  cashier.Checkout(cart, VALID_CREDIT_CARD));
+            Assert.Throws<Exception>(() =>  cashier.Checkout(cart, GetValidCreditCard()));
             Assert.Empty(cashier.GetDaybook());
         }
 
@@ -228,7 +216,7 @@ namespace TusLibros.UnitTests
             cart.Add(VALID_ITEM, 1);
             var cashier = new Cashier(GetPricelistWithOneValidItem(1), new MerchantNoMoneyInAccountError());
 
-            var exception = Assert.Throws<Exception>(() => cashier.Checkout(cart, VALID_CREDIT_CARD));
+            var exception = Assert.Throws<Exception>(() => cashier.Checkout(cart, GetValidCreditCard()));
             Assert.Equal(Merchant.ACCOUNT_HAS_NO_MONEY_ERROR, exception.Message);
         }
 
@@ -239,9 +227,8 @@ namespace TusLibros.UnitTests
             var items = cart.GetItems().Count;
             var cashier = new Cashier(GetPricelistWithTwoValidItems(), new MerchantNoMoneyInAccountError());
 
-            Assert.Throws<Exception>(() =>  cashier.Checkout(cart, VALID_CREDIT_CARD));
+            Assert.Throws<Exception>(() =>  cashier.Checkout(cart, GetValidCreditCard()));
             Assert.Empty(cashier.GetDaybook());
         }
-
     }
 }

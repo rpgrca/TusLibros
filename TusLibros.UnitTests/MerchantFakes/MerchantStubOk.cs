@@ -9,6 +9,6 @@ namespace TusLibros.UnitTests.MerchantFakes
 
         public MerchantStubOk(string transactionIdToReturn) => _transactionIdToReturn = transactionIdToReturn;
 
-        public string Debit(decimal total, string creditCardNumber) =>  _transactionIdToReturn;
+        public string Debit(decimal total, CreditCard creditCard) =>  _transactionIdToReturn;
     }
 }

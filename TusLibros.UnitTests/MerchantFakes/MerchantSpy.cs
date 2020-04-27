@@ -8,13 +8,13 @@ namespace TusLibros.UnitTests.MerchantFakes
         public const string TRANSACTION_ID = "TODO_OK";
         public int ContactQuantity { get; private set; } = 0;
         public decimal SavedTotal;
-        public string SavedCreditCardNumber;
+        public CreditCard SavedCreditCard;
 
-        public string Debit(decimal total, string creditCardNumber)
+        public string Debit(decimal total, CreditCard creditCard)
         {
             ContactQuantity++;
             SavedTotal = total;
-            SavedCreditCardNumber = creditCardNumber;
+            SavedCreditCard = creditCard;
             return TRANSACTION_ID;
         }
     }

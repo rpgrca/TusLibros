@@ -11,8 +11,6 @@ namespace TusLibros
         public const string PRICELIST_IS_NULL_ERROR = "La lista de precios no puede no existir";
         public const string PRICELIST_IS_EMPTY_ERROR = "La lista de precios no puede estar vacía";
         public const string ITEM_NOT_IN_PRICELIST_ERROR = "El producto no está en la lista de precios";
-        public const string CREDIT_CARD_NUMBER_IS_NULL_ERROR = "El número de la tarjeta de crédito es inválida";
-        public const string CREDIT_CARD_NUMBER_IS_INVALID_ERROR = "El número de la tarjeta de crédito es inválida";
         public const string MERCHANT_ADAPTER_IS_NULL_ERROR = "El Merchant Adapter no puede no existir";
 
         private readonly Dictionary<object, decimal> _priceList;
@@ -31,15 +29,14 @@ namespace TusLibros
             _daybook = new List<object>();
         }
 
-        public string Checkout(Cart cart, string creditCardNumber)
+        public string Checkout(Cart cart, CreditCard creditCard)
         {
             _ = cart ?? throw new ArgumentException(CART_IS_NULL_ERROR);
+            _ = creditCard ?? throw new ArgumentException(CreditCard.NUMBER_IS_NULL_ERROR);
             if (cart.IsEmpty())
             {
                 throw new ArgumentException(CART_IS_EMPTY_ERROR);
             }
-
-            ValidateCreditCard(creditCardNumber);
 
             var total = cart.GetItems().Sum(i =>
             {
@@ -51,34 +48,15 @@ namespace TusLibros
                 throw new KeyNotFoundException(ITEM_NOT_IN_PRICELIST_ERROR);
             });
 
-            // FIXME: Si el cuarto item es invalido los tres anteriores se agregan al daybook
-            var transactionId = Debit(total, creditCardNumber);
+            var transactionId = Debit(total, creditCard);
             _daybook.AddRange(cart.GetItems());
 
             return transactionId;
         }
 
-        protected virtual string Debit(decimal total, string creditCardNumber)
+        protected virtual string Debit(decimal total, CreditCard creditCard)
         {
-            return _merchantAdapter.Debit(total, creditCardNumber);
-        }
-
-        private static void ValidateCreditCard(string creditCardNumber)
-        {
-            if (string.IsNullOrWhiteSpace(creditCardNumber))
-            {
-                throw new ArgumentException(CREDIT_CARD_NUMBER_IS_NULL_ERROR);
-            }
-
-            if (! decimal.TryParse(creditCardNumber, out decimal _))
-            {
-                throw new ArgumentException(CREDIT_CARD_NUMBER_IS_INVALID_ERROR);
-            }
-
-            if (creditCardNumber.Length != 16)
-            {
-                throw new ArgumentException(CREDIT_CARD_NUMBER_IS_INVALID_ERROR);
-            }
+            return _merchantAdapter.Debit(total, creditCard);
         }
 
         public List<object> GetDaybook() => new List<object>(_daybook);

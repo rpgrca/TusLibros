@@ -6,15 +6,22 @@ namespace TusLibros.UnitTests
 {
     public static class Helpers
     {
+        public const int INVALID_YEAR = -1;
+        public const int INVALID_MONTH = -1;
+        public const int VALID_YEAR = 2020;
+        public const int VALID_MONTH = 6;
         public static readonly object VALID_ITEM = new object();
         public static readonly object ANOTHER_VALID_ITEM = new object();
         public static readonly object INVALID_ITEM = new object();
         public const decimal VALID_PRICE = 10;
         public const decimal ANOTHER_VALID_PRICE = 3;
-        public const string VALID_CREDIT_CARD = "1234567890123456";
+        public const string VALID_CREDIT_CARD_NUMBER = "1234567890123456";
         public const string INVALID_CREDIT_CARD_NUMBER = "999";
         public const string ANOTHER_INVALID_CREDIT_CARD_NUMBER = "1234-5678-123411";
         public const string SUCCESSFUL_TRANSACTION_ID = "Todo bien";
+        public const string VALID_CREDIT_CARD_OWNER = "Juan Perez";
+        public const string INVALID_CREDIT_CARD_OWNER = "";
+        public const string ANOTHER_INVALID_CREDIT_CARD_OWNER ="Este es un nombre con más de 30 caracteres.";
 
         public static List<object> GetCatalogWithValidItem() => new List<object>() { VALID_ITEM };
         public static List<object> GetCatalogWithTwoValidItems() => new List<object>() { VALID_ITEM, ANOTHER_VALID_ITEM };
@@ -28,6 +35,14 @@ namespace TusLibros.UnitTests
             cart.Add(ANOTHER_VALID_ITEM, 2);
             return cart;
         }
+
+        public static CreditCard GetValidCreditCard() =>
+            new CreditCard.Builder()
+                .Numbered(VALID_CREDIT_CARD_NUMBER)
+                .OwnedBy(VALID_CREDIT_CARD_OWNER)
+                .ExpiresOn(2020, 12)
+                .CheckingOn(2020, 04)
+                .Build();
 
         public static Cart GetCartWithOneItem()
         {

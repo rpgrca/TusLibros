@@ -2,7 +2,7 @@ namespace TusLibros
 {
     public interface IMerchantAdapter
     {
-        string Debit(decimal total, string creditCardNumber);
+        string Debit(decimal total, CreditCard creditCard);
     }
 
     public abstract class Merchant
