@@ -8,6 +8,7 @@ namespace TusLibros.Core
     {
         public const string NOT_IN_CATALOG_ERROR = "No existe en el catálogo";
         public const string CATALOG_IS_NULL_ERROR = "El catalogo no puede ser nulo.";
+        public const string QUANTITY_IS_INVALID_ERROR = "La cantidad es errónea.";
 
         private readonly List<object> _items;
         private readonly List<object> _catalog;
@@ -28,7 +29,7 @@ namespace TusLibros.Core
         {
             if (count < 1)
             {
-                throw new ArgumentException();
+                throw new ArgumentException(QUANTITY_IS_INVALID_ERROR);
             }
 
             if (! _catalog.Contains(item))
