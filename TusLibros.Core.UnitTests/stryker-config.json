@@ -4,7 +4,7 @@
         "test-runner": "vstest",
         "reporters": [ "progress", "cleartext", "html" ],
         "solution-path": "..\\TusLibros.sln",
-        "project-file": "TusLibros.csproj",
+        "project-file": "TusLibros.Core.csproj",
         "ignore-methods": ["ConfigureAwait", "Dispose"],
         "coverage-analysis": "all"
     }
