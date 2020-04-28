@@ -75,7 +75,7 @@ namespace TusLibros.API.UnitTests.Fakes
             return this;
         }
 
-        internal MerchantAdapterStubBuilder AlwaysReturns(string expectedTransactionId)
+        public MerchantAdapterStubBuilder AlwaysReturns(string expectedTransactionId)
         {
             _actions.Add(a => a.Setup(p => p.Debit(It.IsAny<decimal>(), It.IsAny<CreditCard>()))
                                .Returns(expectedTransactionId));

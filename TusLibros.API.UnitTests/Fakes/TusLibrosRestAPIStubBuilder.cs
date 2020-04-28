@@ -45,7 +45,7 @@ namespace TusLibros.API.UnitTests.Fakes
         {
             var internalClock = _internalClock ?? new ClockStubBuilder().Build();
             var authenticator = _authenticator ?? new AuthenticatorStubBuilder().Build();
-            var merchantAdapter = _merchantAdapter ?? new MerchantAdapterDummy();
+            var merchantAdapter = _merchantAdapter ?? new MerchantAdapterStubBuilder().Build();
             var pricelist = _pricelist ?? new Dictionary<object, decimal>();
             var catalog = _catalog ?? new List<object>();
 

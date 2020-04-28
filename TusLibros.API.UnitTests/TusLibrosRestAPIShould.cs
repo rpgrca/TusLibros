@@ -20,7 +20,7 @@ namespace TusLibros.API.UnitTests
         {
             var exception = Assert.Throws<ArgumentException>(() =>
                 new TusLibrosRestAPI(null,
-                    new MerchantAdapterDummy(),
+                    new MerchantAdapterStubBuilder().Build(),
                     new ClockStubBuilder().Build(),
                     new Dictionary<object, decimal>(),
                     new List<object>()));
@@ -44,7 +44,7 @@ namespace TusLibros.API.UnitTests
         {
             var exception = Assert.Throws<ArgumentException>(() =>
                 new TusLibrosRestAPI(new AuthenticatorStubBuilder().Build(),
-                    new MerchantAdapterDummy(),
+                    new MerchantAdapterStubBuilder().Build(),
                     null,
                     new Dictionary<object, decimal>(),
                     new List<object>()));
@@ -56,7 +56,7 @@ namespace TusLibros.API.UnitTests
         {
             var exception = Assert.Throws<ArgumentException>(() =>
                 new TusLibrosRestAPI(new AuthenticatorStubBuilder().Build(),
-                    new MerchantAdapterDummy(),
+                    new MerchantAdapterStubBuilder().Build(),
                     new ClockStubBuilder().Build(),
                     null,
                     new List<object>()));
@@ -68,7 +68,7 @@ namespace TusLibros.API.UnitTests
         {
             var exception = Assert.Throws<ArgumentException>(() =>
                 new TusLibrosRestAPI(new AuthenticatorStubBuilder().Build(),
-                    new MerchantAdapterDummy(),
+                    new MerchantAdapterStubBuilder().Build(),
                     new ClockStubBuilder().Build(),
                     new Dictionary<object, decimal>(),
                     null));
