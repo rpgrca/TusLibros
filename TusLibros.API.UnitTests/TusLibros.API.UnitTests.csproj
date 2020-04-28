@@ -18,4 +18,9 @@
     <ProjectReference Include="..\TusLibros.API\TusLibros.API.csproj" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Coverage' ">
+    <Exec Command="dotnet tool restore" />
+    <Exec Command="dotnet coverlet bin/Debug/netcoreapp2.2/TusLibros.API.UnitTests.dll --target &quot;dotnet&quot; --targetargs &quot;test TusLibros.API.UnitTests.csproj --no-build --verbosity quiet&quot; --format cobertura --output reports/coverage/coverage.cobertura.xml" />
+    <Exec Command="dotnet reportgenerator &quot;-reports:reports/coverage/coverage.cobertura.xml&quot; &quot;-targetdir:reports/coverage&quot; &quot;-historydir:reports/coverage/history&quot;" />
+  </Target>
 </Project>
