@@ -8,7 +8,7 @@ namespace TusLibros.API.UnitTests.Fakes
         private IAuthenticator _authenticator;
         private IMerchantAdapter _merchantAdapter;
         private IClock _internalClock;
-        private List<object> _pricelist;
+        private Dictionary<object, decimal> _pricelist;
         private List<object> _catalog;
 
         public TusLibrosRestAPIStubBuilder AuthenticatesWith(IAuthenticator authenticator)
@@ -35,7 +35,7 @@ namespace TusLibros.API.UnitTests.Fakes
             return this;
         }
 
-        public TusLibrosRestAPIStubBuilder UsesPricelist(List<object> pricelist)
+        public TusLibrosRestAPIStubBuilder UsesPricelist(Dictionary<object, decimal> pricelist)
         {
             _pricelist = pricelist;
             return this;
@@ -46,7 +46,7 @@ namespace TusLibros.API.UnitTests.Fakes
             var internalClock = _internalClock ?? new ClockStubBuilder().Build();
             var authenticator = _authenticator ?? new AuthenticatorStubBuilder().Build();
             var merchantAdapter = _merchantAdapter ?? new MerchantAdapterDummy();
-            var pricelist = _pricelist ?? new List<object>();
+            var pricelist = _pricelist ?? new Dictionary<object, decimal>();
             var catalog = _catalog ?? new List<object>();
 
             return new TusLibrosRestAPI(authenticator, merchantAdapter, internalClock, pricelist, catalog);

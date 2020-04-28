@@ -19,10 +19,10 @@ namespace TusLibros.API
         private readonly IMerchantAdapter _merchantAdapter;
         private readonly IAuthenticator _authenticator;
         private readonly IClock _internalClock;
-        private readonly List<object> _pricelist;
+        private readonly Dictionary<object, decimal> _pricelist;
         private readonly List<object> _catalog;
 
-        public TusLibrosRestAPI(IAuthenticator authenticator, IMerchantAdapter merchantAdapter, IClock internalClock, List<object> pricelist, List<object> catalog)
+        public TusLibrosRestAPI(IAuthenticator authenticator, IMerchantAdapter merchantAdapter, IClock internalClock, Dictionary<object, decimal> pricelist, List<object> catalog)
         {
             _authenticator = authenticator ?? throw new ArgumentException(AUTHENTICATOR_IS_NULL_ERROR);
             _merchantAdapter = merchantAdapter?? throw new ArgumentException(Cashier.MERCHANT_ADAPTER_IS_NULL_ERROR);
@@ -97,6 +97,21 @@ namespace TusLibros.API
             }
 
             session.LastUsed = currentDateTime;
+        }
+
+        public string Checkout(string cartId, string number, string expirationDate, string owner)
+        {
+            var session = GetValidSession(cartId);
+            var creditCard = new CreditCard.Builder()
+                .ExpiresOn(new YearMonth(expirationDate))
+                .CheckingOn(_internalClock.GetDateTime())
+                .Numbered(number)
+                .OwnedBy(owner)
+                .Build();
+            var cashier = new Cashier(_pricelist, _merchantAdapter);
+            var transactionId = cashier.Checkout(session.Cart, creditCard);
+
+            return transactionId;
         }
     }
 }

@@ -32,6 +32,13 @@ namespace TusLibros.Core
                 return this;
             }
 
+            public Builder ExpiresOn(YearMonth yearMonth)
+            {
+                _expirationYear = yearMonth.Year;
+                _expirationMonth = yearMonth.Month;
+                return this;
+            }
+
             public Builder OwnedBy(string owner)
             {
                 _owner = owner;
@@ -48,6 +55,13 @@ namespace TusLibros.Core
             {
                 _currentYear = year;
                 _currentMonth = month;
+                return this;
+            }
+
+            public Builder CheckingOn(DateTime dateTime)
+            {
+                _currentYear = dateTime.Year;
+                _currentMonth = dateTime.Month;
                 return this;
             }
 

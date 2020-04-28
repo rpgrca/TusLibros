@@ -9,7 +9,11 @@ namespace TusLibros.API.UnitTests
     public class TusLibrosRestAPIShould
     {
         private readonly object VALID_ITEM = "1";
+        private readonly object ANOTHER_VALID_ITEM = "2";
         private readonly object INVALID_ITEM = "-1";
+        private readonly string VALID_CARD_NUMBER = "1234567890123456";
+        private readonly string VALID_CARD_OWNER = "Juan Perez";
+        private readonly string VALID_EXPIRATION_DATE = "122024";
 
         [Fact]
         public void GivenANewTusLibrosRestAPI_WhenCreatingWithNullAuthenticator_ThenAnExceptionIsThrown()
@@ -18,7 +22,7 @@ namespace TusLibros.API.UnitTests
                 new TusLibrosRestAPI(null,
                     new MerchantAdapterDummy(),
                     new ClockStubBuilder().Build(),
-                    new List<object>(),
+                    new Dictionary<object, decimal>(),
                     new List<object>()));
             Assert.Equal(TusLibrosRestAPI.AUTHENTICATOR_IS_NULL_ERROR, exception.Message);
         }
@@ -30,7 +34,7 @@ namespace TusLibros.API.UnitTests
                 new TusLibrosRestAPI(new AuthenticatorStubBuilder().Build(),
                     null,
                     new ClockStubBuilder().Build(),
-                    new List<object>(),
+                    new Dictionary<object, decimal>(),
                     new List<object>()));
             Assert.Equal(Cashier.MERCHANT_ADAPTER_IS_NULL_ERROR, exception.Message);
         }
@@ -42,7 +46,7 @@ namespace TusLibros.API.UnitTests
                 new TusLibrosRestAPI(new AuthenticatorStubBuilder().Build(),
                     new MerchantAdapterDummy(),
                     null,
-                    new List<object>(),
+                    new Dictionary<object, decimal>(),
                     new List<object>()));
             Assert.Equal(TusLibrosRestAPI.CLOCK_IS_INVALID_ERROR, exception.Message);
         }
@@ -66,7 +70,7 @@ namespace TusLibros.API.UnitTests
                 new TusLibrosRestAPI(new AuthenticatorStubBuilder().Build(),
                     new MerchantAdapterDummy(),
                     new ClockStubBuilder().Build(),
-                    new List<object>(),
+                    new Dictionary<object, decimal>(),
                     null));
             Assert.Equal(Cart.CATALOG_IS_NULL_ERROR, exception.Message);
         }
@@ -163,26 +167,6 @@ namespace TusLibros.API.UnitTests
                 .Build();
 
             var cartId = sut.CreateCart("validClientId", "validPassword");
-
-            var exception = Assert.Throws<ArgumentException>(() => sut.ListCart(cartId));
-            Assert.Equal(TusLibrosRestAPI.CART_HAS_EXPIRED_ERROR, exception.Message);
-        }
-
-        [Fact]
-        public void GivenANewTusLibrosRestAPI_WhenListingAnExpiredCartWithItems_ThenAnExceptionIsThrown()
-        {
-            var clockStub = new ClockStub(new DateTime(2020, 4, 28, 5, 0, 0));
-            var sut = new TusLibrosRestAPIStubBuilder()
-                .AuthenticatesWith(new AuthenticatorStubBuilder()
-                                        .Returns(true)
-                                        .Build())
-                .MeasuresTimeWith(clockStub)
-                .UsesCatalog(new List<object> { VALID_ITEM })
-                .Build();
-
-            var cartId = sut.CreateCart("validClientId", "validPassword");
-            sut.AddToCart(cartId, VALID_ITEM, 1);
-            clockStub.AddMinutes(31);
 
             var exception = Assert.Throws<ArgumentException>(() => sut.ListCart(cartId));
             Assert.Equal(TusLibrosRestAPI.CART_HAS_EXPIRED_ERROR, exception.Message);
@@ -289,6 +273,69 @@ namespace TusLibros.API.UnitTests
 
             var exception = Assert.Throws<ArgumentException>(() => sut.AddToCart(cartId, VALID_ITEM, invalidQuantity));
             Assert.Equal(Cart.QUANTITY_IS_INVALID_ERROR, exception.Message);
+        }
+
+        [Fact]
+        public void GivenANewTusLibrosRestAPI_WhenListingAnExpiredCartWithItems_ThenAnExceptionIsThrown()
+        {
+            var clockStub = new ClockStub(new DateTime(2020, 4, 28, 5, 0, 0));
+            var sut = new TusLibrosRestAPIStubBuilder()
+                .AuthenticatesWith(new AuthenticatorStubBuilder()
+                                        .Returns(true)
+                                        .Build())
+                .MeasuresTimeWith(clockStub)
+                .UsesCatalog(new List<object> { VALID_ITEM })
+                .Build();
+
+            var cartId = sut.CreateCart("validClientId", "validPassword");
+            sut.AddToCart(cartId, VALID_ITEM, 1);
+            clockStub.AddMinutes(31);
+
+            var exception = Assert.Throws<ArgumentException>(() => sut.ListCart(cartId));
+            Assert.Equal(TusLibrosRestAPI.CART_HAS_EXPIRED_ERROR, exception.Message);
+        }
+
+        [Fact]
+        public void GivenANewTusLibrosRestAPI_WhenListingCartWithSeveralItems_ThenReturnsAList()
+        {
+            const int quantity1 = 4;
+            const int quantity2 = 13;
+            var sut = new TusLibrosRestAPIStubBuilder()
+                .AuthenticatesWith(new AuthenticatorStubBuilder()
+                                        .Returns(true)
+                                        .Build())
+                .MeasuresTimeWith(new ClockStubBuilder()
+                                        .Returns(new DateTime(2020, 4, 28, 12, 0, 0))
+                                        .IsExpired(false)
+                                        .Build())
+                .UsesCatalog(new List<object> { VALID_ITEM, ANOTHER_VALID_ITEM })
+                .Build();
+
+            var cartId = sut.CreateCart("validClientId", "validPassword");
+            sut.AddToCart(cartId, VALID_ITEM, quantity1);
+            sut.AddToCart(cartId, ANOTHER_VALID_ITEM, quantity2);
+            var itemsInCart = sut.ListCart(cartId);
+            Assert.Collection(itemsInCart,
+                elem1 => { Assert.Equal(VALID_ITEM, elem1.Item1); Assert.Equal(quantity1, elem1.Item2); },
+                elem2 => { Assert.Equal(ANOTHER_VALID_ITEM, elem2.Item1); Assert.Equal(quantity2, elem2.Item2); });
+        }
+
+        [Fact]
+        public void GivenANewTusLibrosRestAPI_WhenCheckingOutInvalidCart_ThenAnExceptionIsThrown()
+        {
+            var sut = new TusLibrosRestAPIStubBuilder()
+                .AuthenticatesWith(new AuthenticatorStubBuilder()
+                                        .Returns(true)
+                                        .Build())
+                .MeasuresTimeWith(new ClockStubBuilder()
+                                        .Returns(new DateTime(2020, 4, 28, 12, 0, 0))
+                                        .IsExpired(false)
+                                        .Build())
+                .UsesCatalog(new List<object> { VALID_ITEM })
+                .Build();
+
+            var exception = Assert.Throws<ArgumentException>(() => sut.Checkout("invalidCartId", VALID_CARD_NUMBER, VALID_EXPIRATION_DATE, VALID_CARD_OWNER));
+            Assert.Equal(TusLibrosRestAPI.CART_ID_IS_INVALID_ERROR, exception.Message);
         }
     }
 }

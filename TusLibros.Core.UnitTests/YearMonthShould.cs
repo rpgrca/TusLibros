@@ -86,5 +86,26 @@ namespace TusLibros.Core.UnitTests
         // TODO: GivenTwoEqualYearMonths_WhenComparingOlder_ThenReturnsFalse
         // TODO: GivenTwoEqualYearMonths_WhenComparingNewer_ThenReturnsFalse
         // TODO: GivenTwoEqualYearMonths_WhenComparingEqual_ThenReturnsTrue
+
+        [Fact]
+        public void GivenNewYearMonth_WhenInitializedWithCorrectString_ThenBuildsIt()
+        {
+            var yearMonth = new YearMonth("042024");
+            Assert.Equal(4, yearMonth.Month);
+            Assert.Equal(2024, yearMonth.Year);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("    ")]
+        [InlineData("invalidDate")]
+        [InlineData("12020")]
+        [InlineData("404040")]
+        public void GivenNewYearMonth_WhenInitializedWithIncorrectString_ThenAnExceptionIsThrown(string invalidDate)
+        {
+            var exception = Assert.Throws<ArgumentException>(() => new YearMonth(invalidDate));
+            Assert.Equal(YearMonth.DATE_IS_INVALID_ERROR, exception.Message);
+        }
     }
 }
