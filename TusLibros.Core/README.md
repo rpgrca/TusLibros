@@ -1,0 +1,1 @@
+La lógica de negocios del sitio está en estas clases. En el constructor del Cashier se recibe la interface con la cual se comunicará hacia afuera (sin implementar) cada vez que necesite cobrar un pedido. Esta clase recibe mensajes de TusLibros.API.
