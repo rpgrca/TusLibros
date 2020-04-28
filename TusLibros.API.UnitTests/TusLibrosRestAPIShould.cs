@@ -250,7 +250,7 @@ namespace TusLibros.API.UnitTests
         }
 
         [Fact]
-        public void GivenANewTusLibrosRestAPI_WhenAddingInvalidItems__ThenAnExceptionIsThrown()
+        public void GivenANewTusLibrosRestAPI_WhenAddingInvalidItems_ThenAnExceptionIsThrown()
         {
             var sut = new TusLibrosRestAPIStubBuilder()
                 .AuthenticatesWith(new AuthenticatorStubBuilder()
@@ -267,6 +267,28 @@ namespace TusLibros.API.UnitTests
 
             var exception = Assert.Throws<Exception>(() => sut.AddToCart(cartId, INVALID_ITEM, 1));
             Assert.Equal(Cart.NOT_IN_CATALOG_ERROR, exception.Message);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void GivenANewTusLibrosRestAPI_WhenAddingItemsWithWrongQuantity_ThenAnExceptionIsThrown(int invalidQuantity)
+        {
+            var sut = new TusLibrosRestAPIStubBuilder()
+                .AuthenticatesWith(new AuthenticatorStubBuilder()
+                                        .Returns(true)
+                                        .Build())
+                .MeasuresTimeWith(new ClockStubBuilder()
+                                        .IsExpired(false)
+                                        .Returns(new DateTime(2020, 4, 28))
+                                        .Build())
+                .UsesCatalog(new List<object> { VALID_ITEM })
+                .Build();
+
+            var cartId = sut.CreateCart("validClientId", "validPassword");
+
+            var exception = Assert.Throws<ArgumentException>(() => sut.AddToCart(cartId, VALID_ITEM, invalidQuantity));
+            Assert.Equal(Cart.QUANTITY_IS_INVALID_ERROR, exception.Message);
         }
     }
 }
