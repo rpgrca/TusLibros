@@ -1,0 +1,1 @@
+Esta es la interfaz entre la lógica de negocios (TusLibros.Core) y la interface REST API propiamente dicha (que no se incluye en el proyecto pero que recibiría los mensajes HTTP de clientes y utilizaría las clases aquí contenidas para completar los pedidos).
