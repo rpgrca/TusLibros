@@ -5,6 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TusLibros\TusLibros.csproj" />
+    <ProjectReference Include="..\TusLibros.Core\TusLibros.Core.csproj" />
   </ItemGroup>
 </Project>

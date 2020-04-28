@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Moq;
+using TusLibros.Core;
 
 namespace TusLibros.API.UnitTests.Fakes
 {

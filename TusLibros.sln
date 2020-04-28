@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TusLibros", "TusLibros\TusLibros.csproj", "{740E17C8-C9D7-413C-B130-809EA4BCAF01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TusLibros.Core", "TusLibros.Core\TusLibros.Core.csproj", "{740E17C8-C9D7-413C-B130-809EA4BCAF01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TusLibros.UnitTests", "TusLibros.UnitTests\TusLibros.UnitTests.csproj", "{4866C353-32EC-4142-884C-C877D64F1C70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TusLibros.Core.UnitTests", "TusLibros.Core.UnitTests\TusLibros.Core.UnitTests.csproj", "{4866C353-32EC-4142-884C-C877D64F1C70}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TusLibros.API", "TusLibros.API\TusLibros.API.csproj", "{F91FFFA6-1682-4DBF-9429-CED665D51CE7}"
 EndProject

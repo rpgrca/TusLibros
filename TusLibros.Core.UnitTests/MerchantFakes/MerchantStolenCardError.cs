@@ -1,5 +1,7 @@
 using System;
-namespace TusLibros.UnitTests.MerchantFakes
+using TusLibros.Core;
+
+namespace TusLibros.Core.UnitTests.MerchantFakes
 {
     public class MerchantStolenCardError : IMerchantAdapter
     {

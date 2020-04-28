@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using TusLibros.UnitTests.MerchantFakes;
+using TusLibros.Core.UnitTests.MerchantFakes;
 
-namespace TusLibros.UnitTests
+namespace TusLibros.Core.UnitTests
 {
     public static class Helpers
     {
