@@ -5,7 +5,7 @@ namespace TusLibros.API
     internal class Session
     {
         public Cart Cart { get; }
-        public DateTime LastUsed { get; }
+        public DateTime LastUsed { get; set; }
 
         public Session(Cart cart, DateTime creationTime)
         {
