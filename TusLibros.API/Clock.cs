@@ -12,7 +12,7 @@ namespace TusLibros.API
                 _expirationTime = expirationTime;
 
             public bool ExpiredOn(DateTime currentTime) =>
-                DateTime.Compare(currentTime, _expirationTime) >= 0;
+                DateTime.Compare(currentTime, _expirationTime) > 0;
         }
 
         public const string INTERVAL_IS_INVALID_ERROR = "The minimum interval is 1 minute.";
