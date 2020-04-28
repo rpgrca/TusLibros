@@ -1,5 +1,6 @@
 using System;
 using Xunit;
+using TusLibros.Core;
 using static TusLibros.Core.UnitTests.Helpers;
 
 namespace TusLibros.Core.UnitTests
@@ -67,7 +68,8 @@ namespace TusLibros.Core.UnitTests
         public void GivenANewCart_WhenTryingToAddInvalidCountOfItems_ThenAnExceptionIsThrown(int count)
         {
             var cart = GetCartWithACatalogWithValidItem();
-            Assert.Throws<ArgumentException>(() => cart.Add(VALID_ITEM, count));
+            var exception = Assert.Throws<ArgumentException>(() => cart.Add(VALID_ITEM, count));
+            Assert.Equal(Cart.QUANTITY_IS_INVALID_ERROR, exception.Message);
         }
 
         [Fact]
