@@ -6,13 +6,13 @@ namespace TusLibros.API
     {
         public class ClockCompare : IClockCompare
         {
-            private readonly DateTime _targetDateTime;
+            private readonly DateTime _expirationTime;
 
-            public ClockCompare(DateTime targetDateTime) =>
-                _targetDateTime = targetDateTime;
+            public ClockCompare(DateTime expirationTime) =>
+                _expirationTime = expirationTime;
 
-            public bool ExpiredOn(DateTime expirationDate) =>
-                DateTime.Compare(expirationDate, _targetDateTime) < 0;
+            public bool ExpiredOn(DateTime currentTime) =>
+                DateTime.Compare(currentTime, _expirationTime) >= 0;
         }
 
         public const string INTERVAL_IS_INVALID_ERROR = "The minimum interval is 1 minute.";
