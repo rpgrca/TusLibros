@@ -58,26 +58,44 @@ namespace TusLibros.API
         private string GenerateUniqueIdentifier() =>
             Guid.NewGuid().ToString();
 
-        public List<(object, int)> ListCart(string cartId)
+        public List<(object, int)> ListCart(string cartId) =>
+            GetValidSession(cartId)
+                .Cart.GetItems()
+                .GroupBy(p => p)
+                .Select(p => p.ToList())
+                .Select(p => (p[0], p.Count))
+                .ToList();
+
+        public void AddToCart(string cartId, object item, int quantity) =>
+            GetValidSession(cartId).Cart
+                .Add(item, quantity);
+
+        private Session GetValidSession(string cartId)
         {
-            if (string.IsNullOrWhiteSpace(cartId))
+            var session = _carts
+                .Where(p => p.Key == cartId)
+                .Select(p => p.Value)
+                .SingleOrDefault();
+
+            if (session is null)
             {
                 throw new ArgumentException(CART_ID_IS_INVALID_ERROR);
             }
 
-            VerifyCartHasNotExpired(cartId);
-            return new List<(object, int)>();
+            VerifySessionHasNotExpired(session);
+            return session;
         }
 
-        private void VerifyCartHasNotExpired(string cartId)
+        private void VerifySessionHasNotExpired(Session session)
         {
-            var session = _carts.Single(p => p.Key == cartId);
             var currentDateTime = _internalClock.GetDateTime();
 
-            if (_internalClock.Has(session.Value.LastUsed.AddMinutes(30)).ExpiredOn(currentDateTime))
+            if (_internalClock.Has(session.LastUsed.AddMinutes(30)).ExpiredOn(currentDateTime))
             {
                 throw new ArgumentException(CART_HAS_EXPIRED_ERROR);
             }
+
+            session.LastUsed = currentDateTime;
         }
     }
 }
