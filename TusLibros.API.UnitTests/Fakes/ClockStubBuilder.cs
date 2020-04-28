@@ -15,9 +15,20 @@ namespace TusLibros.API.UnitTests.Fakes
 
         public ClockStubBuilder Returns(DateTime dateTime)
         {
-            _actions.Add((p) => p.Setup(q => q.GetDateTime())
-                                 .Returns(dateTime));
+            _actions.Add(p => p.Setup(q => q.GetDateTime())
+                               .Returns(dateTime));
             return this;
+        }
+
+        public ClockStubBuilder IsExpired(bool expired)
+        {
+            var comparerStub = new Mock<IClockCompare>();
+            comparerStub.Setup(p => p.ExpiredOn(It.IsAny<DateTime>()))
+                .Returns(expired);
+
+            _actions.Add(p => p.Setup(q => q.Has(It.IsAny<DateTime>()))
+                               .Returns(comparerStub.Object));
+             return this;
         }
 
         public IClock Build()
