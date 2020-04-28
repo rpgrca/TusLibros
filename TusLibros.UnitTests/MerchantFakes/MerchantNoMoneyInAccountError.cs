@@ -6,7 +6,7 @@ namespace TusLibros.UnitTests.MerchantFakes
     {
         public string Debit(decimal total, CreditCard creditCard)
         {
-            throw new Exception(Merchant.ACCOUNT_HAS_NO_MONEY_ERROR);
+            throw new Exception(MerchantAdapter.ACCOUNT_HAS_NO_MONEY_ERROR);
         }
     }
 }

@@ -88,7 +88,8 @@ namespace TusLibros.UnitTests
         [Fact]
         public void GivenANewCart_WhenInitializedWithNullCatalog_ThenAnExceptionIsThrown()
         {
-            Assert.Throws<ArgumentException>(() => new Cart(null));
+            var exception = Assert.Throws<ArgumentException>(() => new Cart(null));
+            Assert.Equal(Cart.CATALOG_IS_NULL_ERROR, exception.Message);
         }
 
         [Fact]

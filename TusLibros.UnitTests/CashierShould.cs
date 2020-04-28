@@ -252,7 +252,7 @@ namespace TusLibros.UnitTests
             var cashier = new Cashier(GetPricelistWithOneValidItem(1), new MerchantStolenCardError());
 
             var exception = Assert.Throws<Exception>(() => cashier.Checkout(cart, GetValidCreditCard()));
-            Assert.Equal(Merchant.CARD_IS_STOLEN_ERROR, exception.Message);
+            Assert.Equal(MerchantAdapter.CARD_IS_STOLEN_ERROR, exception.Message);
         }
 
         [Fact]
@@ -274,7 +274,7 @@ namespace TusLibros.UnitTests
             var cashier = new Cashier(GetPricelistWithOneValidItem(1), new MerchantNoMoneyInAccountError());
 
             var exception = Assert.Throws<Exception>(() => cashier.Checkout(cart, GetValidCreditCard()));
-            Assert.Equal(Merchant.ACCOUNT_HAS_NO_MONEY_ERROR, exception.Message);
+            Assert.Equal(MerchantAdapter.ACCOUNT_HAS_NO_MONEY_ERROR, exception.Message);
         }
 
         [Fact]

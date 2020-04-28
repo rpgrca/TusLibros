@@ -5,7 +5,7 @@ namespace TusLibros.UnitTests.MerchantFakes
     {
         public string Debit(decimal total, CreditCard creditCard)
         {
-            throw new Exception(Merchant.CARD_IS_STOLEN_ERROR);
+            throw new Exception(MerchantAdapter.CARD_IS_STOLEN_ERROR);
         }
     }
 }
