@@ -337,5 +337,50 @@ namespace TusLibros.API.UnitTests
             var exception = Assert.Throws<ArgumentException>(() => sut.Checkout("invalidCartId", VALID_CARD_NUMBER, VALID_EXPIRATION_DATE, VALID_CARD_OWNER));
             Assert.Equal(TusLibrosRestAPI.CART_ID_IS_INVALID_ERROR, exception.Message);
         }
+
+        [Fact]
+        public void GivenANewTusLibrosRestAPI_WhenCheckingOutEmptyCart_ThenAnExceptionIsThrown()
+        {
+            var sut = new TusLibrosRestAPIStubBuilder()
+                .AuthenticatesWith(new AuthenticatorStubBuilder()
+                                        .Returns(true)
+                                        .Build())
+                .MeasuresTimeWith(new ClockStubBuilder()
+                                        .Returns(new DateTime(2020, 4, 28, 12, 0, 0))
+                                        .IsExpired(false)
+                                        .Build())
+                .UsesCatalog(new List<object> { VALID_ITEM })
+                .UsesPricelist(new Dictionary<object, decimal> { { VALID_ITEM, 1 } })
+                .Build();
+
+            var cartId = sut.CreateCart("validClientId", "validPassword");
+            var exception = Assert.Throws<ArgumentException>(() => sut.Checkout(cartId, VALID_CARD_NUMBER, VALID_EXPIRATION_DATE, VALID_CARD_OWNER));
+            Assert.Equal(Cashier.CART_IS_EMPTY_ERROR, exception.Message);
+        }
+
+        [Fact]
+        public void GivenANewTusLibrosRestAPI_WhenCheckingOutCorrectCart_ThenATransactionIdIsReturned()
+        {
+            const string expectedTransactionId = "ABC";
+            var sut = new TusLibrosRestAPIStubBuilder()
+                .AuthenticatesWith(new AuthenticatorStubBuilder()
+                                        .Returns(true)
+                                        .Build())
+                .MeasuresTimeWith(new ClockStubBuilder()
+                                        .Returns(new DateTime(2020, 4, 28, 12, 0, 0))
+                                        .IsExpired(false)
+                                        .Build())
+                .CommunicatesWith(new MerchantAdapterStubBuilder()
+                                        .AlwaysReturns(expectedTransactionId)
+                                        .Build())
+                .UsesCatalog(new List<object> { VALID_ITEM })
+                .UsesPricelist(new Dictionary<object, decimal> { { VALID_ITEM, 1 } })
+                .Build();
+
+            var cartId = sut.CreateCart("validClientId", "validPassword");
+            sut.AddToCart(cartId, VALID_ITEM, 1);
+            var transactionId = sut.Checkout(cartId, VALID_CARD_NUMBER, VALID_EXPIRATION_DATE, VALID_CARD_OWNER);
+            Assert.Equal(expectedTransactionId, transactionId);
+        }
     }
 }
