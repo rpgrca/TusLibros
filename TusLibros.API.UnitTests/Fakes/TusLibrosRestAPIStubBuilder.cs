@@ -42,8 +42,8 @@ namespace TusLibros.API.UnitTests.Fakes
 
         internal TusLibrosRestAPI Build()
         {
-            var internalClock = _internalClock ?? new ClockDummy();
-            var authenticator = _authenticator ?? new AuthenticatorDummy();
+            var internalClock = _internalClock ?? new ClockStubBuilder().Build();
+            var authenticator = _authenticator ?? new AuthenticatorStubBuilder().Build();
             var merchantAdapter = _merchantAdapter ?? new MerchantAdapterDummy();
             var pricelist = _pricelist ?? new List<object>();
             var catalog = _catalog ?? new List<object>();

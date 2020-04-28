@@ -73,8 +73,8 @@ namespace TusLibros.API
         {
             var session = _carts.Single(p => p.Key == cartId);
             var currentDateTime = _internalClock.GetDateTime();
-            var result = DateTime.Compare(session.Value.LastUsed.AddMinutes(30), currentDateTime);
-            if (result < 0)
+
+            if (_internalClock.Has(session.Value.LastUsed.AddMinutes(30)).ExpiredOn(currentDateTime))
             {
                 throw new ArgumentException(CART_HAS_EXPIRED_ERROR);
             }
