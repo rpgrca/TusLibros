@@ -2,7 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 
-namespace TusLibros
+namespace TusLibros.Core
 {
     public class Cashier
     {

@@ -1,6 +1,7 @@
 using System;
+using TusLibros.Core;
 
-namespace TusLibros.UnitTests.MerchantFakes
+namespace TusLibros.Core.UnitTests.MerchantFakes
 {
     public class MerchantNoMoneyInAccountError : IMerchantAdapter
     {

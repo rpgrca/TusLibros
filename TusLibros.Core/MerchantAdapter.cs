@@ -1,6 +1,6 @@
 using System;
 
-namespace TusLibros
+namespace TusLibros.Core
 {
     public class MerchantAdapter : IMerchantAdapter
     {

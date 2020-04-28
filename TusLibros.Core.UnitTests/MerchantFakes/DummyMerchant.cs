@@ -1,6 +1,6 @@
-using TusLibros;
+using TusLibros.Core;
 
-namespace TusLibros.UnitTests.MerchantFakes
+namespace TusLibros.Core.UnitTests.MerchantFakes
 {
     // Un Dummy nunca hace nada y devuelve valores por defecto
     public class DummyMerchant : IMerchantAdapter

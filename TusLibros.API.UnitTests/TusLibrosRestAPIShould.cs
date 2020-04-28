@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System;
 using Xunit;
+using TusLibros.Core;
 using TusLibros.API.UnitTests.Fakes;
 
 namespace TusLibros.API.UnitTests
@@ -95,6 +96,22 @@ namespace TusLibros.API.UnitTests
 
             var exception = Assert.Throws<ArgumentException>(() => sut.CreateCart(anyClientId, invalidPassword));
             Assert.Equal(TusLibrosRestAPI.INVALID_PASSWORD_ERROR, exception.Message);
+        }
+
+        [Fact]
+        public void GivenANewTusLibrosRestAPI_WhenCreatingCartWithInvalidLogin_ThenAnExceptionIsThrown()
+        {
+            var sut = new TusLibrosRestAPIStubBuilder()
+                .AuthenticatesWith(new AuthenticatorStubBuilder()
+                                       .Returns(false)
+                                       .Build())
+                .MeasuresTimeWith(new ClockStubBuilder()
+                                       .Returns(new DateTime(2020, 4, 27))
+                                       .Build())
+                .Build();
+
+            var exception = Assert.Throws<ArgumentException>(() => sut.CreateCart("usuarioInválido", "passwordInválido"));
+            Assert.Equal(TusLibrosRestAPI.LOGIN_IS_INVALID_ERROR, exception.Message);
         }
 
         [Fact]

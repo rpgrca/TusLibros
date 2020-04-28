@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Xunit;
-using static TusLibros.UnitTests.Helpers;
+using static TusLibros.Core.UnitTests.Helpers;
 
-namespace TusLibros.UnitTests
+namespace TusLibros.Core.UnitTests
 {
     public class CreditCardShould
     {

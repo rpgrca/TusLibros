@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System;
 using Xunit;
-using static TusLibros.UnitTests.Helpers;
-using TusLibros.UnitTests.MerchantFakes;
+using TusLibros.Core.UnitTests.MerchantFakes;
+using static TusLibros.Core.UnitTests.Helpers;
 
-namespace TusLibros.UnitTests
+namespace TusLibros.Core.UnitTests
 {
     public class CashierShould
     {

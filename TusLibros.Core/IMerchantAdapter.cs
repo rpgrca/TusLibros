@@ -1,4 +1,4 @@
-namespace TusLibros
+namespace TusLibros.Core
 {
     public interface IMerchantAdapter
     {

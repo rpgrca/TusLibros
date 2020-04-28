@@ -1,3 +1,5 @@
+using TusLibros.Core;
+
 namespace TusLibros.API.UnitTests.Fakes
 {
     public class MerchantAdapterDummy : IMerchantAdapter

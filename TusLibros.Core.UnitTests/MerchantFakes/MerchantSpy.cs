@@ -1,6 +1,6 @@
-using TusLibros;
+using TusLibros.Core;
 
-namespace TusLibros.UnitTests.MerchantFakes
+namespace TusLibros.Core.UnitTests.MerchantFakes
 {
     // Un Spy o Espía es un Fake que graba la información que se le envía.
     public class MerchantSpy : IMerchantAdapter
