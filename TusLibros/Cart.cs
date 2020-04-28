@@ -6,7 +6,7 @@ namespace TusLibros
 {
     public class Cart
     {
-        private const string NOT_IN_CATALOG_ERROR = "No existe en el catálogo";
+        public const string NOT_IN_CATALOG_ERROR = "No existe en el catálogo";
         public const string CATALOG_IS_NULL_ERROR = "El catalogo no puede ser nulo.";
 
         private readonly List<object> _items;
