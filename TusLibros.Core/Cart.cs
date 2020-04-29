@@ -44,7 +44,6 @@ namespace TusLibros.Core
         }
 
         public int GetCount(object item) => _items.Count(p => p == item);
-
         public bool Contains(object item) => _items.Contains(item);
     }
 }

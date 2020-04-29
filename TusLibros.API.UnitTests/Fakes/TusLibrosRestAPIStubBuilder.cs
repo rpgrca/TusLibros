@@ -10,6 +10,7 @@ namespace TusLibros.API.UnitTests.Fakes
         private IClock _internalClock;
         private Dictionary<object, decimal> _pricelist;
         private List<object> _catalog;
+        private Dictionary<string, List<object>> _balance;
 
         public TusLibrosRestAPIStubBuilder AuthenticatesWith(IAuthenticator authenticator)
         {
@@ -41,6 +42,12 @@ namespace TusLibros.API.UnitTests.Fakes
             return this;
         }
 
+        public TusLibrosRestAPIStubBuilder UsesBalance(Dictionary<string, List<object>> balance)
+        {
+            _balance = balance;
+            return this;
+        }
+
         internal TusLibrosRestAPI Build()
         {
             var internalClock = _internalClock ?? new ClockStubBuilder().Build();
@@ -48,8 +55,9 @@ namespace TusLibros.API.UnitTests.Fakes
             var merchantAdapter = _merchantAdapter ?? new MerchantAdapterStubBuilder().Build();
             var pricelist = _pricelist ?? new Dictionary<object, decimal>();
             var catalog = _catalog ?? new List<object>();
+            var balance = _balance ?? new Dictionary<string, List<object>>();
 
-            return new TusLibrosRestAPI(authenticator, merchantAdapter, internalClock, pricelist, catalog);
+            return new TusLibrosRestAPI(authenticator, merchantAdapter, internalClock, pricelist, catalog, balance);
         }
     }
 }
