@@ -32,7 +32,7 @@ jobs:
       run: coverlet TusLibros.Core.UnitTests/bin/Debug/netcoreapp2.2/TusLibros.Core.UnitTests.dll --target "dotnet" --targetargs "test TusLibros.Core.UnitTests/TusLibros.Core.UnitTests.csproj --no-build --verbosity quiet" --format OpenCover --output core.coverage.xml
 
     - name: Testing API Library
-      run: coverlet TusLibros.API.UnitTests/bin/Debug/netcoreapp2.2/TusLibros.API.UnitTests.dll --target "dotnet" --targetargs "test TusLibros.API.UnitTests/TusLibros.API.UnitTests.csproj --no-build --verbosity quiet" --format OpenCover --output api.coverage.xml --exclude "[TusLibros.Core]*"
+      run: coverlet TusLibros.API.UnitTests/bin/Debug/net7/TusLibros.API.UnitTests.dll --target "dotnet" --targetargs "test TusLibros.API.UnitTests/TusLibros.API.UnitTests.csproj --no-build --verbosity quiet" --format OpenCover --output api.coverage.xml --exclude "[TusLibros.Core]*"
 
     - name: Upload
       run: bash <(curl -s https://codecov.io/bash)
