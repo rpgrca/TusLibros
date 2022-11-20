@@ -132,6 +132,7 @@ namespace TusLibros.Core.UnitTests
                 .Numbered(VALID_CREDIT_CARD_NUMBER)
                 .OwnedBy(VALID_CREDIT_CARD_OWNER)
                 .ExpiresOn(yearMonth)
+                .CheckingOn(2019, 12)
                 .Build();
 
             Assert.NotNull(creditCard);
