@@ -17,16 +17,13 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 2.2.203
+        dotnet-version: 7.0.x
 
     - name: Install dependencies
       run: dotnet restore
 
     - name: Install tools
       run: dotnet tool install --global coverlet.console
-
-    - name: Build Release
-      run: dotnet build --configuration Release --no-restore
 
     - name: Build Debug
       run: dotnet build --configuration Debug --no-restore
@@ -39,3 +36,9 @@ jobs:
 
     - name: Upload
       run: bash <(curl -s https://codecov.io/bash)
+
+    - name: Archive code coverage results
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage-report
+        path: ./*.coverage.xml
