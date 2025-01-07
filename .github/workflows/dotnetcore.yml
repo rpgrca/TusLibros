@@ -17,7 +17,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.x
+        dotnet-version: 9.x
 
     - name: Install dependencies
       run: dotnet restore
@@ -29,13 +29,15 @@ jobs:
       run: dotnet build --configuration Debug --no-restore
 
     - name: Testing Core Library
-      run: coverlet TusLibros.Core.UnitTests/bin/Debug/net8/TusLibros.Core.UnitTests.dll --target "dotnet" --targetargs "test TusLibros.Core.UnitTests/TusLibros.Core.UnitTests.csproj --no-build --verbosity quiet" --format OpenCover --output core.coverage.xml
+      run: coverlet TusLibros.Core.UnitTests/bin/Debug/net9/TusLibros.Core.UnitTests.dll --target "dotnet" --targetargs "test TusLibros.Core.UnitTests/TusLibros.Core.UnitTests.csproj --no-build --verbosity quiet" --format OpenCover --output core.coverage.xml
 
     - name: Testing API Library
-      run: coverlet TusLibros.API.UnitTests/bin/Debug/net8/TusLibros.API.UnitTests.dll --target "dotnet" --targetargs "test TusLibros.API.UnitTests/TusLibros.API.UnitTests.csproj --no-build --verbosity quiet" --format OpenCover --output api.coverage.xml --exclude "[TusLibros.Core]*"
+      run: coverlet TusLibros.API.UnitTests/bin/Debug/net9/TusLibros.API.UnitTests.dll --target "dotnet" --targetargs "test TusLibros.API.UnitTests/TusLibros.API.UnitTests.csproj --no-build --verbosity quiet" --format OpenCover --output api.coverage.xml --exclude "[TusLibros.Core]*"
 
-    - name: Upload
-      run: bash <(curl -s https://codecov.io/bash)
+    - name: Upload coverage to CodeCov
+      uses: codecov/codecov-action@v5
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Archive code coverage results
       uses: actions/upload-artifact@v4
